@@ -36,21 +36,21 @@ public class HaloEntities {
 
 
     public static final RegistryObject<EntityType<CarEntity>> CAR = HALO_ENTITIES.register("car",
-            () -> EntityType.Builder.of((EntityType<CarEntity> p_33002_, Level level) -> new CarEntity(level), MobCategory.MISC).sized(2f, 2f)
+            () -> EntityType.Builder.of((EntityType<CarEntity> entityType, Level level) -> new CarEntity(level), MobCategory.MISC).sized(2f, 2f)
                     .build(new ResourceLocation(HaloCraft.MODID, "car").toString()));
 
     public static final RegistryObject<EntityType<Ghost>> GHOST = HALO_ENTITIES.register("ghost",
-            () -> EntityType.Builder.of((EntityType<Ghost> p_33002_, Level level) -> new Ghost(level), MobCategory.MISC).sized(2f, 1.1f)
+            () -> EntityType.Builder.of((EntityType<Ghost> entityType, Level level) -> new Ghost(level), MobCategory.MISC).sized(2f, 1.1f)
                     .build(new ResourceLocation(HaloCraft.MODID, "ghost").toString()));
     public static final RegistryObject<EntityType<Banshe>> BANSHE = HALO_ENTITIES.register("banshe",
-            () -> EntityType.Builder.of((EntityType<Banshe> p_33002_, Level level) -> new Banshe(level), MobCategory.MISC).sized(2f, 2f)
+            () -> EntityType.Builder.of((EntityType<Banshe> entityType, Level level) -> new Banshe(level), MobCategory.MISC).sized(2f, 2f)
                     .build(new ResourceLocation(HaloCraft.MODID, "banshe").toString()));
     public static final RegistryObject<EntityType<F_19>> F29 = HALO_ENTITIES.register("f29",
-            () -> EntityType.Builder.of((EntityType<F_19> p_33002_, Level level) -> new F_19(level), MobCategory.MISC).sized(2f, 2f)
+            () -> EntityType.Builder.of((EntityType<F_19> entityType, Level level) -> new F_19(level), MobCategory.MISC).sized(2f, 2f)
                     .build(new ResourceLocation(HaloCraft.MODID, "f29").toString()));
 
     public static final RegistryObject<EntityType<BaseBulletEntity>> BULLET = register("bullet",
-            EntityType.Builder.of((EntityType<BaseBulletEntity> p_33002_, Level level) -> new BaseBulletEntity(level), MobCategory.MISC)
+            EntityType.Builder.of((EntityType<BaseBulletEntity> entityType, Level level) -> new BaseBulletEntity(level), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
 
     public static final RegistryObject<EntityType<BeamEntity>> BEAM = register("beam",
@@ -59,7 +59,7 @@ public class HaloEntities {
 
 
     public static final RegistryObject<EntityType<PlasmaProjectileEntity>> LASER = register("laser",
-            EntityType.Builder.of((EntityType<PlasmaProjectileEntity> p_33002_, Level level) -> new PlasmaProjectileEntity(level), MobCategory.MISC)
+            EntityType.Builder.of((EntityType<PlasmaProjectileEntity> entityType, Level level) -> new PlasmaProjectileEntity(level), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
 
 }

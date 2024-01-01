@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 public class HaloCraft
 {
     public static final String MODID = "halocraft";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     private static final String PROTOCOL_VERSION = Integer.toString(1);
     private static final ResourceLocation PACKET_NETWORK_NAME = new ResourceLocation("halocraft:main_channel");
     public static final SimpleChannel NETWORK_WRAPPER = NetworkRegistry.ChannelBuilder
