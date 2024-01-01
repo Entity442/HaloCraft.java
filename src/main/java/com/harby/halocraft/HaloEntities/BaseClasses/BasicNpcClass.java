@@ -1,6 +1,5 @@
 package com.harby.halocraft.HaloEntities.BaseClasses;
 
-import com.harby.halocraft.HaloEntities.AI.PatrolAroundTheAreaGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -10,14 +9,14 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
-public class BasicNpcClass extends PathfinderMob {
+public class BasicNpcClass extends PathfinderMob implements Enemy {
     private static final EntityDataAccessor<BlockPos> PATROL_POSITION = SynchedEntityData.defineId(BasicNpcClass.class, EntityDataSerializers.BLOCK_POS);
     public BasicNpcClass(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
@@ -57,14 +56,6 @@ public class BasicNpcClass extends PathfinderMob {
         super.readAdditionalSaveData(tag);
     }
 
-
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(3,new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(4,new PatrolAroundTheAreaGoal(this));
-        this.goalSelector.addGoal(5,new RandomStrollGoal(this,1));
-
-    }
 
 
     @Override

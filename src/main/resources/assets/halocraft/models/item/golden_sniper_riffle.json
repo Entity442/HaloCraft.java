@@ -1,0 +1,20 @@
+{
+  "parent": "halocraft:item/sniper_riffle_base",
+  "textures": {
+    "1": "halocraft:item/sniper_riffle2"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "shooting": 1
+      },
+      "model": "halocraft:item/golden_sniper_riffle_shoot"
+    },
+    {
+      "predicate": {
+        "reloading": 1
+      },
+      "model": "halocraft:item/golden_sniper_riffle_reload"
+    }
+  ]
+}

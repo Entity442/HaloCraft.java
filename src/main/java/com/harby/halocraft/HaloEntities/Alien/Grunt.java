@@ -1,11 +1,16 @@
 package com.harby.halocraft.HaloEntities.Alien;
 
+import com.harby.halocraft.HaloEntities.AI.PatrolAroundTheAreaGoal;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicNpcClass;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.level.Level;
 
 public class Grunt extends BasicNpcClass {
@@ -24,7 +29,16 @@ public class Grunt extends BasicNpcClass {
 
     }
 
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(Grunt.class));
+        this.goalSelector.addGoal(2,new MeleeAttackGoal(this,1.1,true));
 
+        this.goalSelector.addGoal(5,new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(6,new PatrolAroundTheAreaGoal(this));
+        this.goalSelector.addGoal(7,new RandomStrollGoal(this,1));
+
+    }
 
 
 

@@ -1,10 +1,7 @@
 package com.harby.halocraft.core;
 
 import com.harby.halocraft.HaloCraft;
-import com.harby.halocraft.HaloItems.AssaultRifle;
-import com.harby.halocraft.HaloItems.BlockItemBase;
-import com.harby.halocraft.HaloItems.Gun;
-import com.harby.halocraft.HaloItems.ItemBase;
+import com.harby.halocraft.HaloItems.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -17,6 +14,8 @@ import java.util.List;
 
 public class HaloItems {
     public  static  final List<Item> HALO_ITEMS = new ArrayList<>();
+    public  static  final List<Gun> GUNS_ITEMS = new ArrayList<>();
+
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, HaloCraft.MODID);
     public static void register(IEventBus eventBus) {
@@ -35,8 +34,12 @@ public class HaloItems {
             () -> new ItemBase( new Item.Properties()));
 
 
-    public  static final RegistryObject<Item> AssaultRifle = ITEMS.register("assault_rifle",
+    public  static final RegistryObject<Item> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",
             () -> new AssaultRifle( new Item.Properties()));
+    public  static final RegistryObject<Item> SNIPER_RIFFLE = ITEMS.register("sniper_riffle",
+            () -> new SniperRiffle( new Item.Properties(),false));
+    public  static final RegistryObject<Item> GOLDEN_SNIPER_RIFFLE = ITEMS.register("golden_sniper_riffle",
+            () -> new SniperRiffle( new Item.Properties(),true));
 
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {

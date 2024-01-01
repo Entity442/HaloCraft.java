@@ -1,0 +1,6 @@
+{
+  "parent": "halocraft:item/sniper_riffle_base_reload",
+  "textures": {
+    "1": "halocraft:item/sniper_riffle1"
+  }
+}

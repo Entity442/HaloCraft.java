@@ -3,7 +3,7 @@ package com.harby.halocraft.Client;
 import com.harby.halocraft.Client.Models.*;
 import com.harby.halocraft.Client.Renderers.*;
 import com.harby.halocraft.HaloCraft;
-import com.harby.halocraft.HaloEntities.Vehicles.F_19;
+import com.harby.halocraft.Message.HandleReloadingModels;
 import com.harby.halocraft.Particles.PlasmaParticleTrail;
 import com.harby.halocraft.core.HaloEntities;
 import com.harby.halocraft.core.HaloParticles;
@@ -13,6 +13,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod.EventBusSubscriber(modid = HaloCraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
@@ -47,5 +48,10 @@ public class ClientEvents {
     public static void registerParticle(RegisterParticleProvidersEvent event) {
         Minecraft.getInstance().particleEngine.register(HaloParticles.PLASMA_TRAIL.get(),
                 PlasmaParticleTrail.MobProvider::new);
+    }
+
+    @SubscribeEvent
+    public static void clientSetup(final FMLClientSetupEvent event) {
+        HandleReloadingModels.addReloading();
     }
 }

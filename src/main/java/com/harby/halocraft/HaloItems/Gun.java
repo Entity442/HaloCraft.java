@@ -23,9 +23,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class Gun extends Item {
+    private boolean isReloading = false;
+    private boolean isShooting = false;
+    private int shootingTicks = 0;
     public Gun(Properties properties) {
         super(properties);
         HaloItems.HALO_ITEMS.add(this);
+        HaloItems.GUNS_ITEMS.add(this);
     }
 
     public static final Predicate<ItemStack> AMMO = (stack) -> {
@@ -61,6 +65,12 @@ public abstract class Gun extends Item {
         this.setAmmo(stack,getMaxAmmo());
     }
 
+    public boolean isReloading(){
+        return this.isReloading;
+    }
+    public boolean isShooting(){
+        return this.isShooting;
+    }
 
 
     public int getAmmo(ItemStack stack) {
@@ -89,6 +99,7 @@ public abstract class Gun extends Item {
             return;
         }
         if (this.getAmmo(stack) > 0){
+            this.isShooting = true;
             this.shotProjectile(level,livingEntity,stack);
             this.setAmmo(stack,this.getAmmo(stack)-1);
         }else{
@@ -116,6 +127,9 @@ public abstract class Gun extends Item {
         }
         return ItemStack.EMPTY;
     }
+    public int flashTicks(){
+        return 10;
+    }
 
 
     @Override
@@ -136,6 +150,14 @@ public abstract class Gun extends Item {
                             }
                         }
                     }
+                }
+            }
+            this.isReloading = livingEntity.getCooldowns().isOnCooldown(this);
+            if (this.isShooting){
+                this.shootingTicks++;
+                if (this.shootingTicks >= this.flashTicks()){
+                    this.isShooting = false;
+                    this.shootingTicks = 0;
                 }
             }
         }
