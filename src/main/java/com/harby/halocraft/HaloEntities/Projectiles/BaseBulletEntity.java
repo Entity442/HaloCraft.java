@@ -121,18 +121,19 @@ public class BaseBulletEntity extends Projectile {
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
         if (!level().isClientSide) {
-            boolean flag = true;
+            boolean flag = false;
             this.noPhysics = false;
             BlockState state = this.level().getBlockState(result.getBlockPos());
             if (state.is(HaloTags.Blocks.SHOOTING_THROUGH)) {
                 this.noPhysics = true;
-                flag = false;
+                flag = true;
             }
             if (state.is(HaloTags.Blocks.BREAK_ON_SHOOT)) {
-                float durability = state.getDestroySpeed(level(), result.getBlockPos());
+                //float durability = state.getDestroySpeed(level(), result.getBlockPos());
                 //if (durability >= 0 && durability <= 1) {
                     level().destroyBlock(result.getBlockPos(), true, this.getOwner());
                 //}
+                flag = true;
             }
             if (flag) {
                 this.discard();
