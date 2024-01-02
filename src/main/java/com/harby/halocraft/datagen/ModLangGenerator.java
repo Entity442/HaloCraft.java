@@ -24,7 +24,7 @@ public class ModLangGenerator extends LanguageProvider {
         String lang = this.getName().replace("Languages: ", "");
         try {
             //Get data from sheet
-            URL url = new URL("https://sheetdb.io/api/v1/ylmy7zgiwbjrq\n");
+            URL url = new URL("https://sheetdb.io/api/v1/2jp877ts25yod\n");
             URLConnection request = url.openConnection();
             request.connect();
             BufferedReader br = new BufferedReader(new InputStreamReader((InputStream) request.getContent()));
