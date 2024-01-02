@@ -1,5 +1,6 @@
 package com.harby.halocraft.core;
 
+import com.harby.halocraft.HaloBlocks.BeamEmitter;
 import com.harby.halocraft.HaloCraft;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -36,5 +37,6 @@ public class HaloBlocks {
     public static final RegistryObject<Block> DENSE_ASTEROID = BLOCKS.register("dense_asteroid", () -> new Block(BlockBehaviour.Properties.of().strength(2f,6f).sound(SoundType.STONE)));
     public static final RegistryObject<Block> ASTEROID = BLOCKS.register("asteroid", () -> new Block(BlockBehaviour.Properties.of().strength(2f,4f).sound(SoundType.STONE)));
 
+    public static final RegistryObject<Block> BEAM_EMITTER = BLOCKS.register("beam_emitter", BeamEmitter::new);
 
 }

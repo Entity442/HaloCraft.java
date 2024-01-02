@@ -3,6 +3,7 @@ package com.harby.halocraft.core;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.Alien.Grunt;
 import com.harby.halocraft.HaloEntities.Projectiles.BaseBulletEntity;
+import com.harby.halocraft.HaloEntities.Projectiles.BeamEntity;
 import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
 import com.harby.halocraft.HaloEntities.Vehicles.Banshe;
 import com.harby.halocraft.HaloEntities.Vehicles.CarEntity;
@@ -51,6 +52,11 @@ public class HaloEntities {
     public static final RegistryObject<EntityType<BaseBulletEntity>> BULLET = register("bullet",
             EntityType.Builder.of((EntityType<BaseBulletEntity> p_33002_, Level level) -> new BaseBulletEntity(level), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
+
+    public static final RegistryObject<EntityType<BeamEntity>> BEAM = register("beam",
+            EntityType.Builder.of((EntityType<BeamEntity> p_33002_, Level level) -> new BeamEntity(level), MobCategory.MISC)
+                    .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(1f, 1f));
+
 
     public static final RegistryObject<EntityType<PlasmaProjectileEntity>> LASER = register("laser",
             EntityType.Builder.of((EntityType<PlasmaProjectileEntity> p_33002_, Level level) -> new PlasmaProjectileEntity(level), MobCategory.MISC)

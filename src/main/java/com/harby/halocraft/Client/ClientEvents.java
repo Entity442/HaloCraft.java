@@ -3,12 +3,18 @@ package com.harby.halocraft.Client;
 import com.harby.halocraft.Client.Models.*;
 import com.harby.halocraft.Client.Renderers.*;
 import com.harby.halocraft.HaloCraft;
+import com.harby.halocraft.HaloItems.Gun;
+import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.Message.HandleReloadingModels;
 import com.harby.halocraft.Particles.PlasmaParticleTrail;
 import com.harby.halocraft.core.HaloEntities;
 import com.harby.halocraft.core.HaloParticles;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,6 +46,7 @@ public class ClientEvents {
         event.registerEntityRenderer(HaloEntities.F29.get(), F_19Renderer::new);
         event.registerEntityRenderer(HaloEntities.BULLET.get(), BulletRenderer::new);
         event.registerEntityRenderer(HaloEntities.LASER.get(), PlasmaProjectileRenderer::new);
+        event.registerEntityRenderer(HaloEntities.BEAM.get(), BeamRenderer::new);
 
         event.registerEntityRenderer(HaloEntities.GRUNT.get(), GruntRenderer::new);
     }

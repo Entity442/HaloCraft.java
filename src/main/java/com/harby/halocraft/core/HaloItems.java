@@ -61,4 +61,6 @@ public class HaloItems {
     public static final RegistryObject<Item> ASTEROID = block(HaloBlocks.ASTEROID);
     public static final RegistryObject<Item> DENSE_ASTEROID = block(HaloBlocks.DENSE_ASTEROID);
 
+    public static final RegistryObject<Item> BEAM_EMITTER = block(HaloBlocks.BEAM_EMITTER);
+
 }
