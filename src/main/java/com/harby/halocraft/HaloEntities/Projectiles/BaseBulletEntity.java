@@ -1,6 +1,5 @@
 package com.harby.halocraft.HaloEntities.Projectiles;
 
-import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
 import com.harby.halocraft.core.HaloEntities;
 import com.harby.halocraft.core.HaloTags;
@@ -11,16 +10,12 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.GlassBlock;
-import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -129,10 +124,7 @@ public class BaseBulletEntity extends Projectile {
                 flag = true;
             }
             if (state.is(HaloTags.Blocks.BREAK_ON_SHOOT)) {
-                //float durability = state.getDestroySpeed(level(), result.getBlockPos());
-                //if (durability >= 0 && durability <= 1) {
-                    level().destroyBlock(result.getBlockPos(), true, this.getOwner());
-                //}
+                level().destroyBlock(result.getBlockPos(), true, this.getOwner());
                 flag = true;
             }
             if (flag) {
