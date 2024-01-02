@@ -19,7 +19,7 @@ public class HaloTags {
     }
 
     public static class Items {
-        public static final TagKey<Item> BULLET = tag("halo_bullet");
+        public static final TagKey<Item> BULLETS = tag("halo_bullet");
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(HaloCraft.MODID, name));
