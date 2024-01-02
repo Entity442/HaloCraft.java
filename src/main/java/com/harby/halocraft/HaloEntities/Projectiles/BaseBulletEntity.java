@@ -2,6 +2,7 @@ package com.harby.halocraft.HaloEntities.Projectiles;
 
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
+import com.harby.halocraft.core.BulletType;
 import com.harby.halocraft.core.HaloEntities;
 import com.harby.halocraft.core.HaloTags;
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
@@ -30,8 +32,8 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
 public class BaseBulletEntity extends Projectile {
-    private static final EntityDataAccessor<Integer> TYPE =
-            SynchedEntityData.defineId(BaseBulletEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> TYPE =
+            SynchedEntityData.defineId(BaseBulletEntity.class, EntityDataSerializers.STRING);
     private float setBaseDamage;
 
     public BaseBulletEntity(Level level) {
@@ -51,26 +53,26 @@ public class BaseBulletEntity extends Projectile {
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(TYPE, 0);
+        this.entityData.define(TYPE, BulletType.NONE.name());
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        this.setProjectileType(tag.getInt("bullet_type"));
+        this.setProjectileType(BulletType.valueOf(tag.getString("bullet_type")));
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.putInt("bullet_type", this.getProjectileType());
+        tag.putString("bullet_type", this.getProjectileType().name());
     }
 
 
-    public void setProjectileType(int i) {
-        this.entityData.set(TYPE, i);
+    public void setProjectileType(BulletType bt) {
+        this.entityData.set(TYPE, bt.name());
     }
 
-    public int getProjectileType() {
-        return this.entityData.get(TYPE);
+    public BulletType getProjectileType() {
+        return BulletType.valueOf(this.entityData.get(TYPE));
     }
 
     @Override
@@ -88,7 +90,7 @@ public class BaseBulletEntity extends Projectile {
     protected void onHitEntity(EntityHitResult entityHitResult) {
         if (!this.level().isClientSide()) {
             if (entityHitResult.getEntity() instanceof LivingEntity livingEntity) {
-                if (this.getProjectileType() == 0) {
+                /*if (this.getProjectileType() == 0) {
                     livingEntity.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage());
                 } else if (this.getProjectileType() == 1) {
                     livingEntity.hurt(this.level().damageSources().explosion(this, this.getOwner()), getDamage());
@@ -100,13 +102,34 @@ public class BaseBulletEntity extends Projectile {
                     livingEntity.hurt(this.level().damageSources().freeze(), getDamage());
                 } else if (this.getProjectileType() == 4) {
                     livingEntity.hurt(this.level().damageSources().sonicBoom(this), getDamage());
+                }*/
+                switch (this.getProjectileType()) {
+                    case BULLET -> {
+                        livingEntity.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage());
+                    }
+                    case EXPLOSIVE_BULLET -> {
+                        livingEntity.hurt(this.level().damageSources().explosion(this, this.getOwner()), getDamage());
+                        livingEntity.level().explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, Level.ExplosionInteraction.NONE);
+                    }
+                    case FIRE_BULLET -> {
+                        livingEntity.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage());
+                        livingEntity.setSecondsOnFire(6);
+                    }
+                    case FROZEN_BULLET -> {
+                        livingEntity.hurt(this.level().damageSources().freeze(), getDamage());
+                    }
+                    case PENETRATING_BULLET -> {
+                        livingEntity.hurt(this.level().damageSources().sonicBoom(this), getDamage());
+                    }
                 }
             } else {
                 if (entityHitResult.getEntity() instanceof BasicVehicleEntity basicVehicle) {
                     int i = 1;
-                    if (this.getProjectileType() == 1 || this.getProjectileType() == 4) {
+                    /*if (this.getProjectileType() == 1 || this.getProjectileType() == 4) {
                         i = 2;
-                    }
+                    }*/
+                    if (this.getProjectileType().equals(BulletType.EXPLOSIVE_BULLET) || this.getProjectileType().equals(BulletType.FROZEN_BULLET))
+                        i = 2;
                     basicVehicle.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage() * i);
                 } else {
                     entityHitResult.getEntity().hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage());
@@ -131,7 +154,7 @@ public class BaseBulletEntity extends Projectile {
             if (state.is(HaloTags.Blocks.BREAK_ON_SHOOT)) {
                 //float durability = state.getDestroySpeed(level(), result.getBlockPos());
                 //if (durability >= 0 && durability <= 1) {
-                    level().destroyBlock(result.getBlockPos(), true, this.getOwner());
+                level().destroyBlock(result.getBlockPos(), true, this.getOwner());
                 //}
                 flag = true;
             }
