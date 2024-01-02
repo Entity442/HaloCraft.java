@@ -1,6 +1,8 @@
 package com.harby.halocraft.datagen;
 
 import com.harby.halocraft.HaloCraft;
+import com.harby.halocraft.core.HaloItems;
+import com.harby.halocraft.core.HaloTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -17,6 +19,12 @@ public class ModItemTagGenerator extends ItemTagsProvider {
     }
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+        this.tag(HaloTags.Items.BULLET)
+                .add(HaloItems.BULLET.get())
+                .add(HaloItems.EXPLOSIVE_BULLET.get())
+                .add(HaloItems.FIRE_BULLET.get())
+                .add(HaloItems.FROZEN_BULLET.get())
+                .add(HaloItems.PENETRATING_BULLET.get());
 
     }
 }

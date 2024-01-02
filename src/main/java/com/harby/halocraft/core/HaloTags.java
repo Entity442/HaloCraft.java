@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 
 public class HaloTags {
     public static class Blocks {
-
         public static final TagKey<Block> SHOOTING_THROUGH = tag("shooting_through");
         public static final TagKey<Block> BREAK_ON_SHOOT = tag("break_on_shoot");
 
@@ -20,6 +19,7 @@ public class HaloTags {
     }
 
     public static class Items {
+        public static final TagKey<Item> BULLET = tag("halo_bullet");
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(HaloCraft.MODID, name));
