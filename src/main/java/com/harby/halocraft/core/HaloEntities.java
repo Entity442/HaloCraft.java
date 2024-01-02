@@ -26,8 +26,8 @@ public class HaloEntities {
         HALO_ENTITIES.register(eventBus);
     }
 
-    private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
-        return HALO_ENTITIES.register(registryname, () -> entityTypeBuilder.build(registryname));
+    private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryName, EntityType.Builder<T> entityTypeBuilder) {
+        return HALO_ENTITIES.register(registryName, () -> entityTypeBuilder.build(registryName));
     }
 
     public static final RegistryObject<EntityType<Grunt>> GRUNT = HALO_ENTITIES.register("grunt",
@@ -54,7 +54,7 @@ public class HaloEntities {
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
 
     public static final RegistryObject<EntityType<BeamEntity>> BEAM = register("beam",
-            EntityType.Builder.of((EntityType<BeamEntity> p_33002_, Level level) -> new BeamEntity(level), MobCategory.MISC)
+            EntityType.Builder.of((EntityType<BeamEntity> entityType, Level level) -> new BeamEntity(level), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(1f, 1f));
 
 
