@@ -23,4 +23,9 @@ public class BansheRenderer<T extends Banshe> extends VehicleRenderer<T> {
         return new ResourceLocation(HaloCraft.MODID,
                 "textures/entity/blank.png");
     }
+
+    @Override
+    public ResourceLocation getDetailedTexture() {
+        return new ResourceLocation(HaloCraft.MODID,"textures/entity/blank1.png");
+    }
 }

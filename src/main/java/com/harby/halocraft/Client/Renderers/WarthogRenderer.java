@@ -24,4 +24,9 @@ public class WarthogRenderer <T extends BasicVehicleEntity> extends VehicleRende
         return new ResourceLocation(HaloCraft.MODID,
                 "textures/entity/blank.png");
     }
+
+    @Override
+    public ResourceLocation getDetailedTexture() {
+        return new ResourceLocation(HaloCraft.MODID,"textures/entity/test.png");
+    }
 }
