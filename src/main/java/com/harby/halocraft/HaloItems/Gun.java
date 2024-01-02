@@ -8,6 +8,8 @@ import com.harby.halocraft.core.HaloItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -102,6 +104,7 @@ public abstract class Gun extends Item {
             this.isShooting = true;
             this.shotProjectile(level,livingEntity,stack);
             this.setAmmo(stack,this.getAmmo(stack)-1);
+            livingEntity.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 1.0F, 1.0F);
         }else{
             if (livingEntity instanceof Player player){
                 player.displayClientMessage(Component.literal("Out of Ammo"),true);
