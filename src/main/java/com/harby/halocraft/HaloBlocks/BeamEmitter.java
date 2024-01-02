@@ -28,7 +28,7 @@ public class BeamEmitter extends Block {
     public void randomTick(BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource randomSource) {
         super.randomTick(state, serverLevel, pos, randomSource);
         BeamEntity beam =  new BeamEntity(serverLevel);
-        beam.moveTo(pos.getX() -0.5,pos.getY()-0.5,pos.getZ()-0.5);
+        beam.moveTo(pos.getX() +0.5,pos.getY(),pos.getZ()+0.5);
         beam.setDeltaMovement(new Vec3(0,0.1,0));
         serverLevel.addFreshEntity(beam);
     }

@@ -20,7 +20,7 @@ public class BeamEntity extends Projectile {
     @Override
     public void tick() {
         super.tick();
-        if (this.tickCount >= 300) {
+        if (this.tickCount >= 400) {
             this.remove(RemovalReason.DISCARDED);
         }
         Vec3 vec3 = this.getDeltaMovement();
@@ -31,12 +31,13 @@ public class BeamEntity extends Projectile {
         double r = (float) (this.getColor() >> 16 & 255) / 255.0F;
         double g = (float) (this.getColor() >> 8 & 255) / 255.0F;
         double b = (float) (this.getColor() & 255) / 255.0F;
-        double x = d0- this.random.nextDouble();
-        double y = d1- this.random.nextDouble();
-        double z = d2- this.random.nextDouble();
-        for (int e = 0; e<8;e++){
+        double x = d0+ this.random.nextDouble() - this.random.nextDouble();
+        double y = d1+ this.random.nextDouble() - this.random.nextDouble();
+        double z = d2+ this.random.nextDouble() - this.random.nextDouble();
+        for (int e = 0; e<14;e++){
             level().addParticle(HaloParticles.PLASMA_TRAIL.get(),x, y, z,r,g,b);
         }
+        level().addParticle(HaloParticles.PLASMA_TRAIL.get(),d0, y-1, d2,r,g,b);
     }
 
     private int getColor() {
