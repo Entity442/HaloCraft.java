@@ -13,7 +13,7 @@ public class HaloCreativeTab {
     public static final DeferredRegister<CreativeModeTab> HALO_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, HaloCraft.MODID);
 
     public static final RegistryObject<CreativeModeTab> HALOCRAFT = HALO_TABS.register("halocraft",
-            () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.halocraft.halocraft"))
+            () -> CreativeModeTab.builder().title(Component.translatable("item_group.halocraft.halocraft"))
                     .icon(Items.NETHER_STAR::getDefaultInstance).displayItems((parameters, output) -> {
                         HaloItems.HALO_ITEMS.forEach(item -> output.accept(item.asItem()));
                     }).build()
