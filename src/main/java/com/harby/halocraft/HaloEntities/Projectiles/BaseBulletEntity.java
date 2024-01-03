@@ -1,6 +1,5 @@
 package com.harby.halocraft.HaloEntities.Projectiles;
 
-import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
 import com.harby.halocraft.core.BulletType;
 import com.harby.halocraft.core.HaloEntities;
@@ -12,17 +11,12 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.GlassBlock;
-import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -157,6 +151,9 @@ public class BaseBulletEntity extends Projectile {
                 level().destroyBlock(result.getBlockPos(), true, this.getOwner());
                 //}
                 flag = true;
+            }
+            if (!flag && this.getProjectileType().equals(BulletType.EXPLOSIVE_BULLET)) {
+                level().explode(this, this.getX()+0.5d, this.getY()+0.5d, this.getZ()+1d, 1.0f, Level.ExplosionInteraction.NONE);
             }
             if (flag) {
                 this.discard();
