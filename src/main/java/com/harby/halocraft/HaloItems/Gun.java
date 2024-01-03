@@ -2,13 +2,11 @@ package com.harby.halocraft.HaloItems;
 
 import com.google.common.base.Predicate;
 import com.harby.halocraft.HaloCraft;
-import com.harby.halocraft.HaloEntities.Projectiles.BaseBulletEntity;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.core.HaloItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -168,16 +166,16 @@ public abstract class Gun extends Item {
     }
 
     public int getAmmunition(Item item){
-        if (item == HaloItems.BULLET.get()){
-            return 0;
-        }if (item == HaloItems.EXPLOSIVE_BULLET.get()){
-            return 1;
-        }if (item == HaloItems.FIRE_BULLET.get()){
-            return 2;
-        }if (item == HaloItems.FROZEN_BULLET.get()){
-            return 3;
-        }if (item == HaloItems.PENETRATING_BULLET.get()){
-            return 4;
+        if (AmmoTypes.BASE_BULLET.compareItem(item)){
+            return AmmoTypes.BASE_BULLET.getValue();
+        }if (AmmoTypes.FIRE_BULLET.compareItem(item)){
+            return AmmoTypes.FIRE_BULLET.getValue();
+        }if (AmmoTypes.PENETRATING_BULLET.compareItem(item)){
+            return AmmoTypes.PENETRATING_BULLET.getValue();
+        }if (AmmoTypes.EXPLOSIVE_BULLET.compareItem(item)){
+            return AmmoTypes.EXPLOSIVE_BULLET.getValue();
+        }if (AmmoTypes.FROZEN_BULLET.compareItem(item)){
+            return AmmoTypes.FROZEN_BULLET.getValue();
         }
         return 0;
     }
