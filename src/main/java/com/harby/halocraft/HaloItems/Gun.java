@@ -35,12 +35,6 @@ public abstract class Gun extends Item {
         HaloItems.GUNS_ITEMS.add(this);
     }
 
-    /*public static final Predicate<ItemStack> AMMO = (stack) -> {
-        return stack.getItem() == HaloItems.BULLETS.get().asItem() || stack.getItem() == HaloItems.EXPLOSIVE_BULLET.get().asItem()
-                || stack.getItem() == HaloItems.FIRE_BULLET.get().asItem() || stack.getItem() == HaloItems.FROZEN_BULLET.get().asItem()
-                || stack.getItem() == HaloItems.PENETRATING_BULLET.get().asItem();
-    };*/
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player livingEntity, InteractionHand hand) {
         ItemStack itemstack = livingEntity.getItemInHand(hand);
@@ -63,9 +57,8 @@ public abstract class Gun extends Item {
 
     public abstract int getWeaponReloadCooldown();
 
-    public void reloadGun(Player player, ItemStack stack) {
+    public void reloadGun(Player player) {
         player.getCooldowns().addCooldown(this, this.getWeaponReloadCooldown());
-        this.setAmmo(stack, getMaxAmmo());
     }
 
     public boolean isReloading() {
@@ -124,17 +117,17 @@ public abstract class Gun extends Item {
     }
 
     public ItemStack lookForAmmo(Player player, ItemStack gun) {
-        int size = player.getInventory().getContainerSize();
-        for (int i = 0; i <= size; i++) {
+        if (!player.getInventory().contains(HaloTags.Items.BULLET)) return ItemStack.EMPTY;
+        for (int i = 0; i <= player.getInventory().getContainerSize(); i++) {
             ItemStack itemStack = player.getInventory().getItem(i);
-            if (itemStack.is(HaloTags.Items.BULLETS)) {
+            if (itemStack.is(HaloTags.Items.BULLET)) {
                 if (this.getAmmo(gun) != 0 && !this.getAmmoType(gun).equals(this.getAmmunition(itemStack.getItem()))) {
                     continue;
                 }
                 return itemStack;
             }
         }
-        //if (player.isCreative()) return new ItemStack(HaloItems.BULLET.get());
+        if (player.isCreative()) return new ItemStack(HaloItems.BULLET.get());
         return ItemStack.EMPTY;
     }
 
@@ -153,18 +146,14 @@ public abstract class Gun extends Item {
                 if (this.getAmmo(gunStack) < this.getMaxAmmo()) {
                     if (HaloKeys.getKey(2)) {
                         HaloCraft.sendMSGToServer(new HaloKeys(livingEntity.getId(), 2));
-                        //check if player is creative
-                        if (livingEntity.getAbilities().instabuild) {
-                            this.reloadGun(livingEntity, gunStack);
-                        } else {
-                            ItemStack ammoStack = lookForAmmo(livingEntity, gunStack);
-                            if (ammoStack != ItemStack.EMPTY) {
-                                if (getAmmunition(ammoStack.getItem()).equals(BulletType.NONE)) return;
-                                this.setAmmoType(gunStack, getAmmunition(ammoStack.getItem()));
-                                if (ammoStack.getCount() < this.getMaxAmmo()) return;
-                                ammoStack.shrink(this.getMaxAmmo() - this.getAmmo(gunStack));
-                                this.reloadGun(livingEntity, gunStack);
-                            }
+                        ItemStack ammoStack = lookForAmmo(livingEntity, gunStack);
+                        if (ammoStack != ItemStack.EMPTY) {
+                            if (getAmmunition(ammoStack.getItem()).equals(BulletType.NONE)) return;
+                            this.setAmmoType(gunStack, getAmmunition(ammoStack.getItem()));
+                            int ammo = Math.min(this.getMaxAmmo() - this.getAmmo(gunStack), ammoStack.getCount());
+                            if (!livingEntity.isCreative()) ammoStack.shrink(ammo);
+                            this.setAmmo(gunStack, this.getAmmo(gunStack) + ammo);
+                            this.reloadGun(livingEntity);
                         }
                     }
                 }
