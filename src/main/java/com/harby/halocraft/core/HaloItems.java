@@ -23,15 +23,15 @@ public class HaloItems {
     }
 
     public  static final RegistryObject<Item> BULLET = ITEMS.register("bullet",
-            () -> new ItemBase( new Item.Properties()));
+            () -> new BulletItem( new Item.Properties()));
     public  static final RegistryObject<Item> EXPLOSIVE_BULLET = ITEMS.register("explosive_bullet",
-            () -> new ItemBase( new Item.Properties()));
+            () -> new BulletItem( new Item.Properties()));
     public  static final RegistryObject<Item> FIRE_BULLET = ITEMS.register("fire_bullet",
-            () -> new ItemBase( new Item.Properties()));
+            () -> new BulletItem( new Item.Properties()));
     public  static final RegistryObject<Item> FROZEN_BULLET = ITEMS.register("frozen_bullet",
-            () -> new ItemBase( new Item.Properties()));
+            () -> new BulletItem( new Item.Properties()));
     public  static final RegistryObject<Item> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
-            () -> new ItemBase( new Item.Properties()));
+            () -> new BulletItem( new Item.Properties()));
 
 
     public  static final RegistryObject<Item> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",

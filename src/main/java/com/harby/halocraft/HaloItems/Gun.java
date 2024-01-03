@@ -33,9 +33,7 @@ public abstract class Gun extends Item {
     }
 
     public static final Predicate<ItemStack> AMMO = (stack) -> {
-        return stack.getItem() == HaloItems.BULLET.get().asItem() || stack.getItem() == HaloItems.EXPLOSIVE_BULLET.get().asItem()
-                || stack.getItem() == HaloItems.FIRE_BULLET.get().asItem() || stack.getItem() == HaloItems.FROZEN_BULLET.get().asItem()
-                || stack.getItem() == HaloItems.PENETRATING_BULLET.get().asItem();
+        return stack.getItem() instanceof BulletItem;
     };
 
     @Override
