@@ -35,6 +35,7 @@ public class ClientEvents {
         event.registerLayerDefinition(PlasmaProjectileModel.LAYER_LOCATION, PlasmaProjectileModel::createBodyLayer);
         event.registerLayerDefinition(F_19Model.LAYER_LOCATION, F_19Model::createBodyLayer);
         event.registerLayerDefinition(GruntModel.LAYER_LOCATION, GruntModel::createBodyLayer);
+        event.registerLayerDefinition(PlasmaRing.LAYER_LOCATION, PlasmaRing::createBodyLayer);
     }
 
 
