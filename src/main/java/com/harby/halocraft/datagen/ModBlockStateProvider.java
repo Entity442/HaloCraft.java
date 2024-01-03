@@ -17,7 +17,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         for (RegistryObject<Block> blockRegistryObject : HaloBlocks.BLOCKS.getEntries()) {
-            if (ConfigDataGenerator.excludesBlocksGenerate.contains(blockRegistryObject)) {
+            if (ConfigDataGenerator.excludesBlocksGenerate.contains(blockRegistryObject.get())) {
                 continue;
             }
             blockWithItem(blockRegistryObject);

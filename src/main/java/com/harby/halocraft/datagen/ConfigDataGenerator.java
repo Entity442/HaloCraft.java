@@ -4,23 +4,23 @@ import com.harby.halocraft.core.HaloBlocks;
 import com.harby.halocraft.core.HaloItems;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 
 public class ConfigDataGenerator {
-    static final ArrayList<RegistryObject<Block>> excludesBlocksGenerate = new ArrayList<>();
+    static final ArrayList<Block> excludesBlocksGenerate = new ArrayList<>();
 
     static {
-        excludesBlocksGenerate.add(HaloBlocks.BEAM_EMITTER);
+        excludesBlocksGenerate.add(HaloBlocks.BEAM_EMITTER.get());
     }
 
-    static final ArrayList<RegistryObject<Item>> excludesItemsGenerate = new ArrayList<>();
+    static final ArrayList<Item> excludesItemsGenerate = new ArrayList<>();
 
     static {
-        excludesItemsGenerate.add(HaloItems.ASSAULT_RIFFLE);
-        excludesItemsGenerate.add(HaloItems.SNIPER_RIFFLE);
-        excludesItemsGenerate.add(HaloItems.GOLDEN_SNIPER_RIFFLE);
+        excludesItemsGenerate.add(HaloItems.ASSAULT_RIFFLE.get());
+        excludesItemsGenerate.add(HaloItems.SNIPER_RIFFLE.get());
+        excludesItemsGenerate.add(HaloItems.GOLDEN_SNIPER_RIFFLE.get());
+        excludesItemsGenerate.add(HaloItems.ENERGIE_SWORD.get());
     }
 
     static final ArrayList<String> langIndex = new ArrayList<>();
