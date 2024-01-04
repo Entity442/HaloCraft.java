@@ -32,7 +32,7 @@ public class EnergieSword extends SwordItem {
 
     @Override
     public int getUseDuration(ItemStack pStack) {
-        return 40;//40 ticks = 2s
+        return 20;//20 ticks = 1s
     }
 
     @Override
@@ -51,9 +51,9 @@ public class EnergieSword extends SwordItem {
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         if (!entity.level().isClientSide() && count < 1) {
-            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 20, 1, true, false, true));
+            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 1, true, false, true));
             entity.hurtMarked = true;
-            entity.knockback(1.5F, entity.getLookAngle().x * -1, entity.getLookAngle().z * -1);
+            entity.knockback(2.5F, -entity.getLookAngle().x, -entity.getLookAngle().z);
             if (!((Player) entity).isCreative()) {
                 stack.hurtAndBreak(1, entity, (player) -> player.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
