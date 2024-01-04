@@ -30,7 +30,7 @@ public abstract class Gun extends Item {
     private int shootingTicks = 0;
 
     public Gun(Properties properties) {
-        super(properties);
+        super(properties.stacksTo(1));
         HaloItems.HALO_ITEMS.add(this);
         HaloItems.GUNS_ITEMS.add(this);
     }
