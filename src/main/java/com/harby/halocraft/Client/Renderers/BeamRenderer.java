@@ -2,7 +2,6 @@ package com.harby.halocraft.Client.Renderers;
 
 import com.harby.halocraft.Client.Models.PlasmaRing;
 import com.harby.halocraft.HaloCraft;
-import com.harby.halocraft.HaloEntities.Projectiles.BaseBulletEntity;
 import com.harby.halocraft.HaloEntities.Projectiles.BeamEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -33,7 +32,8 @@ public class BeamRenderer<T extends BeamEntity> extends EntityRenderer<T> {
     public void render(T pEntity, float value, float pPartialTick, PoseStack stack, MultiBufferSource source, int pPackedLight) {
         stack.pushPose();
         stack.translate(0,1.5,0);
-        stack.mulPose(Axis.YP.rotationDegrees(180.0F - value));
+        stack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        stack.mulPose(Axis.YP.rotationDegrees(180.0F));
         stack.mulPose(Axis.ZP.rotationDegrees(-180F));
         VertexConsumer vertexConsumer = source.getBuffer(this.model.renderType(getTextureLocation(pEntity)));
         this.model.renderToBuffer(stack, vertexConsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0F);

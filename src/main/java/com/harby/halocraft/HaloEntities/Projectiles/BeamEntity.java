@@ -44,6 +44,6 @@ public class BeamEntity extends Projectile {
     }
 
     private int getColor() {
-        return 6719955;
+        return -16711681;
     }
 }
