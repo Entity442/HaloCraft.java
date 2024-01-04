@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class EnergieSword extends SwordItem {
 
     public EnergieSword(Properties properties) {
-        super(Tiers.DIAMOND, 3, -2.4F, properties);
+        super(Tiers.DIAMOND, 5, -2.4F, properties);
         HaloItems.HALO_ITEMS.add(this);
     }
 
@@ -80,7 +80,7 @@ public class EnergieSword extends SwordItem {
 
     public boolean isOff(ItemStack pStack) {
         if (!pStack.getOrCreateTag().contains("off")) {
-            pStack.getOrCreateTag().putBoolean("off", true);
+            pStack.getOrCreateTag().putBoolean("off", false);
         }
         return pStack.getTag().getBoolean("off");
     }
@@ -99,5 +99,9 @@ public class EnergieSword extends SwordItem {
         return !isOff(pStack) && ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
     }
 
-
+    @Override
+    public void onCraftedBy(ItemStack pStack, Level pLevel, Player pPlayer) {
+        super.onCraftedBy(pStack, pLevel, pPlayer);
+        pStack.getOrCreateTag().putBoolean("off", true);
+    }
 }
