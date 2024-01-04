@@ -23,7 +23,7 @@ public class WarthogRenderer <T extends CarEntity> extends VehicleRenderer<T> {
     @Override
     public ResourceLocation getTintedTexture() {
         return new ResourceLocation(HaloCraft.MODID,
-                "textures/entity/blank.png");
+                "textures/entity/car_tint.png");
     }
 
     @Override
