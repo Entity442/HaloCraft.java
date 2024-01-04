@@ -19,7 +19,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         for (RegistryObject<Item> item : HaloItems.ITEMS.getEntries()) {
-            if (ConfigDataGenerator.excludesItemsGenerate.contains(item)) {continue;}
+            if (ConfigDataGenerator.excludesItemsGenerate.contains(item.get())) {continue;}
             ResourceLocation id = item.getId();
             if (HaloBlocks.BLOCKS.getEntries().stream().noneMatch(block -> block.getId().equals(id))) {
                 simpleItem(item);
