@@ -3,7 +3,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "halocraft:item/sangheeli_sword_handle",
-		"1": "halocraft:item/sangheeli_sword_blade",
+		"1": "halocraft:item/sangheeli_sword_translucent",
 		"particle": "halocraft:item/sangheeli_sword_handle"
 	},
 	"elements": [
@@ -13,8 +13,8 @@
 			"to": [15, 25, 8],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 3, 0]},
 			"faces": {
-				"north": {"uv": [0, 0, 7, 9], "texture": "#1"},
-				"south": {"uv": [7, 0, 14, 9], "texture": "#1"}
+				"north": {"uv": [9, 0, 16, 9], "texture": "#1"},
+				"south": {"uv": [9, 0, 16, 9], "texture": "#1"}
 			}
 		},
 		{
