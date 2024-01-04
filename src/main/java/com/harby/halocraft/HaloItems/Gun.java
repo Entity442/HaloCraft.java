@@ -11,6 +11,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +41,9 @@ public abstract class Gun extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player livingEntity, InteractionHand hand) {
         ItemStack itemstack = livingEntity.getItemInHand(hand);
+        if (twoHands() && isTwoHandAvailable(livingEntity)){
+            return InteractionResultHolder.fail(itemstack);
+        }
         livingEntity.awardStat(Stats.ITEM_USED.get(this));
         livingEntity.startUsingItem(hand);
         return InteractionResultHolder.consume(itemstack);
@@ -51,6 +56,7 @@ public abstract class Gun extends Item {
     }
 
     public abstract int getShootingDelay();
+    public abstract boolean twoHands();
 
     public abstract void shotProjectile(Level level, LivingEntity livingEntity,ItemStack stack);
 
@@ -136,7 +142,7 @@ public abstract class Gun extends Item {
         if (entity instanceof Player livingEntity){
             if (livingEntity.getMainHandItem() == stack){
                 if (this.getAmmo(stack) < this.getMaxAmmo()){
-                    if (HaloKeys.getKey(2)){
+                    if (HaloKeys.getKey(2) && isTwoHandAvailable(livingEntity)){
                         HaloCraft.sendMSGToServer(new HaloKeys(livingEntity.getId(), 2));
                         if (livingEntity.getAbilities().instabuild){
                             this.reloadGun(livingEntity,stack);
@@ -159,6 +165,9 @@ public abstract class Gun extends Item {
                     this.shootingTicks = 0;
                 }
             }
+            if (twoHands() && isTwoHandAvailable(livingEntity)){
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 2, false, false, false));
+            }
         }
         super.inventoryTick(stack, level, entity, value, devalue);
     }
@@ -176,5 +185,9 @@ public abstract class Gun extends Item {
             return AmmoTypes.FROZEN_BULLET.getValue();
         }
         return 0;
+    }
+
+    public boolean isTwoHandAvailable(Player pPlayer){
+        return (pPlayer.getItemInHand(InteractionHand.MAIN_HAND) != ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.OFF_HAND) != ItemStack.EMPTY);
     }
 }

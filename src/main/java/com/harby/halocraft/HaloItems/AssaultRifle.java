@@ -36,5 +36,8 @@ public class AssaultRifle extends Gun{
         }
     }
 
-
+    @Override
+    public boolean twoHands() {
+        return false;
+    }
 }
