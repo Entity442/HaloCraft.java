@@ -28,6 +28,7 @@ public abstract class Gun extends Item {
     private boolean isReloading = false;
     private boolean isShooting = false;
     private int shootingTicks = 0;
+
     public Gun(Properties properties) {
         super(properties);
         HaloItems.HALO_ITEMS.add(this);
@@ -41,7 +42,7 @@ public abstract class Gun extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player livingEntity, InteractionHand hand) {
         ItemStack itemstack = livingEntity.getItemInHand(hand);
-        if (twoHands() && isTwoHandAvailable(livingEntity)){
+        if (this.twoHands() && !isTwoHandAvailable(livingEntity)) {
             return InteractionResultHolder.fail(itemstack);
         }
         livingEntity.awardStat(Stats.ITEM_USED.get(this));
@@ -56,23 +57,25 @@ public abstract class Gun extends Item {
     }
 
     public abstract int getShootingDelay();
+
     public abstract boolean twoHands();
 
-    public abstract void shotProjectile(Level level, LivingEntity livingEntity,ItemStack stack);
+    public abstract void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack);
 
     public abstract int getMaxAmmo();
 
     public abstract int getWeaponReloadCooldown();
 
-    public void reloadGun(Player player,ItemStack stack){
+    public void reloadGun(Player player, ItemStack stack) {
         player.getCooldowns().addCooldown(this, this.getWeaponReloadCooldown());
-        this.setAmmo(stack,getMaxAmmo());
+        this.setAmmo(stack, getMaxAmmo());
     }
 
-    public boolean isReloading(){
+    public boolean isReloading() {
         return this.isReloading;
     }
-    public boolean isShooting(){
+
+    public boolean isShooting() {
         return this.isShooting;
     }
 
@@ -99,17 +102,17 @@ public abstract class Gun extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int va) {
-        if (va % this.getShootingDelay() != 0){
+        if (va % this.getShootingDelay() != 0) {
             return;
         }
-        if (this.getAmmo(stack) > 0){
+        if (this.getAmmo(stack) > 0) {
             this.isShooting = true;
-            this.shotProjectile(level,livingEntity,stack);
-            this.setAmmo(stack,this.getAmmo(stack)-1);
+            this.shotProjectile(level, livingEntity, stack);
+            this.setAmmo(stack, this.getAmmo(stack) - 1);
             livingEntity.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 1.0F, 1.0F);
-        }else{
-            if (livingEntity instanceof Player player){
-                player.displayClientMessage(Component.literal("Out of Ammo"),true);
+        } else {
+            if (livingEntity instanceof Player player) {
+                player.displayClientMessage(Component.literal("Out of Ammo"), true);
             }
         }
         super.onUseTick(level, livingEntity, stack, va);
@@ -122,72 +125,79 @@ public abstract class Gun extends Item {
         super.appendHoverText(itemStack, level, components, flag);
     }
 
-    public ItemStack lookForAmmo(Player player){
+    public ItemStack lookForAmmo(Player player) {
         int size = player.getInventory().getContainerSize();
-        for (int i = 0;i <= size;i++){
+        for (int i = 0; i <= size; i++) {
             ItemStack itemStack = player.getInventory().getItem(i);
-            if (AMMO.test(itemStack)){
+            if (AMMO.test(itemStack)) {
                 return itemStack;
             }
         }
         return ItemStack.EMPTY;
     }
-    public int flashTicks(){
+
+    public int flashTicks() {
         return 10;
     }
 
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int value, boolean devalue) {
-        if (entity instanceof Player livingEntity){
-            if (livingEntity.getMainHandItem() == stack){
-                if (this.getAmmo(stack) < this.getMaxAmmo()){
-                    if (HaloKeys.getKey(2) && isTwoHandAvailable(livingEntity)){
+        if (entity instanceof Player livingEntity) {
+            if (stack.getItem() instanceof Gun gunStack && (livingEntity.getMainHandItem() == stack || livingEntity.getOffhandItem() == stack)) {
+                if (this.getAmmo(stack) < this.getMaxAmmo()) {
+                    if (HaloKeys.getKey(2) && isTwoHandAvailable(livingEntity)) {
                         HaloCraft.sendMSGToServer(new HaloKeys(livingEntity.getId(), 2));
-                        if (livingEntity.getAbilities().instabuild){
-                            this.reloadGun(livingEntity,stack);
-                        }else {
+                        if (livingEntity.getAbilities().instabuild) {
+                            this.reloadGun(livingEntity, stack);
+                        } else {
                             ItemStack stack1 = lookForAmmo(livingEntity);
-                            if (stack1 != ItemStack.EMPTY){
+                            if (stack1 != ItemStack.EMPTY) {
                                 stack1.shrink(1);
-                                this.setAmmoType(stack,getAmmunition(stack1.getItem()));
-                                this.reloadGun(livingEntity,stack);
+                                this.setAmmoType(stack, getAmmunition(stack1.getItem()));
+                                this.reloadGun(livingEntity, stack);
                             }
                         }
                     }
                 }
+                if (!isTwoHandAvailable(livingEntity) && gunStack.twoHands()) {
+                    livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 1, false, false, true));
+                }
             }
             this.isReloading = livingEntity.getCooldowns().isOnCooldown(this);
-            if (this.isShooting){
+            if (this.isShooting) {
                 this.shootingTicks++;
-                if (this.shootingTicks >= this.flashTicks()){
+                if (this.shootingTicks >= this.flashTicks()) {
                     this.isShooting = false;
                     this.shootingTicks = 0;
                 }
-            }
-            if (twoHands() && isTwoHandAvailable(livingEntity)){
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 2, false, false, false));
             }
         }
         super.inventoryTick(stack, level, entity, value, devalue);
     }
 
-    public int getAmmunition(Item item){
-        if (AmmoTypes.BASE_BULLET.compareItem(item)){
+    public int getAmmunition(Item item) {
+        if (AmmoTypes.BASE_BULLET.compareItem(item)) {
             return AmmoTypes.BASE_BULLET.getValue();
-        }if (AmmoTypes.FIRE_BULLET.compareItem(item)){
+        }
+        if (AmmoTypes.FIRE_BULLET.compareItem(item)) {
             return AmmoTypes.FIRE_BULLET.getValue();
-        }if (AmmoTypes.PENETRATING_BULLET.compareItem(item)){
+        }
+        if (AmmoTypes.PENETRATING_BULLET.compareItem(item)) {
             return AmmoTypes.PENETRATING_BULLET.getValue();
-        }if (AmmoTypes.EXPLOSIVE_BULLET.compareItem(item)){
+        }
+        if (AmmoTypes.EXPLOSIVE_BULLET.compareItem(item)) {
             return AmmoTypes.EXPLOSIVE_BULLET.getValue();
-        }if (AmmoTypes.FROZEN_BULLET.compareItem(item)){
+        }
+        if (AmmoTypes.FROZEN_BULLET.compareItem(item)) {
             return AmmoTypes.FROZEN_BULLET.getValue();
         }
         return 0;
     }
 
-    public boolean isTwoHandAvailable(Player pPlayer){
-        return (pPlayer.getItemInHand(InteractionHand.MAIN_HAND) != ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.OFF_HAND) != ItemStack.EMPTY);
+    public boolean isTwoHandAvailable(Player pPlayer) {
+        return (pPlayer.getItemInHand(InteractionHand.MAIN_HAND) == ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof Gun)
+                ||
+                (pPlayer.getItemInHand(InteractionHand.OFF_HAND) == ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof Gun);
     }
 }
