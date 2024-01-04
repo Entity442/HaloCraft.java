@@ -51,7 +51,7 @@ public class EnergieSword extends SwordItem {
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         if (!entity.level().isClientSide() && count < 1) {
-            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 20, 1, true, false, true));
+            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 1, true, false, true));
             entity.hurtMarked = true;
             entity.knockback(2.5F, -entity.getLookAngle().x, -entity.getLookAngle().z);
             if (!((Player) entity).isCreative()) {
