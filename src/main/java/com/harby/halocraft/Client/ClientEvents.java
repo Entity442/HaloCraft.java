@@ -1,20 +1,16 @@
 package com.harby.halocraft.Client;
 
+import com.harby.halocraft.Client.ArmorLayers.HaloArmorLayer;
 import com.harby.halocraft.Client.Models.*;
 import com.harby.halocraft.Client.Renderers.*;
 import com.harby.halocraft.HaloCraft;
-import com.harby.halocraft.HaloItems.Gun;
-import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.Message.HandleReloadingModels;
 import com.harby.halocraft.Particles.PlasmaParticleTrail;
 import com.harby.halocraft.core.HaloEntities;
 import com.harby.halocraft.core.HaloParticles;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,6 +32,8 @@ public class ClientEvents {
         event.registerLayerDefinition(F_19Model.LAYER_LOCATION, F_19Model::createBodyLayer);
         event.registerLayerDefinition(GruntModel.LAYER_LOCATION, GruntModel::createBodyLayer);
         event.registerLayerDefinition(PlasmaRing.LAYER_LOCATION, PlasmaRing::createBodyLayer);
+        event.registerLayerDefinition(PlasmaRingH.LAYER_LOCATION, PlasmaRingH::createBodyLayer);
+        event.registerLayerDefinition(unsc_helmetModel.LAYER_LOCATION, unsc_helmetModel::createBodyLayer);
     }
 
 
@@ -61,5 +59,14 @@ public class ClientEvents {
     @SubscribeEvent
     public static void clientSetup(final FMLClientSetupEvent event) {
         HandleReloadingModels.addReloading();
+    }
+
+    @SubscribeEvent
+    public static void addLayers(final EntityRenderersEvent.AddLayers event) {
+        event.getSkins().forEach(name -> {
+            if(event.getSkin(name) instanceof PlayerRenderer renderer) {
+                renderer.addLayer(new HaloArmorLayer<>(renderer));
+            }
+        });
     }
 }

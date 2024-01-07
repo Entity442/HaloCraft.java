@@ -22,6 +22,15 @@ public class HaloItems {
         ITEMS.register(eventBus);
     }
 
+    public  static final RegistryObject<TestArmor> TEST = ITEMS.register("test",
+            () -> new TestArmor(HaloBaseArmor.Type.HELMET,new Item.Properties().durability(100)));
+    public  static final RegistryObject<TestArmor> TEST2 = ITEMS.register("test2",
+            () -> new TestArmor(HaloBaseArmor.Type.CHESTPLATE,new Item.Properties().durability(100)));
+    public  static final RegistryObject<TestArmor> TEST3 = ITEMS.register("test3",
+            () -> new TestArmor(HaloBaseArmor.Type.LEGGINGS,new Item.Properties().durability(100)));
+    public  static final RegistryObject<TestArmor> TEST4 = ITEMS.register("test4",
+            () -> new TestArmor(HaloBaseArmor.Type.BOOTS,new Item.Properties().durability(100)));
+
     public  static final RegistryObject<BulletItem> BULLET = ITEMS.register("bullet",
             () -> new BulletItem( new Item.Properties()));
     public  static final RegistryObject<BulletItem> EXPLOSIVE_BULLET = ITEMS.register("explosive_bullet",
