@@ -3,7 +3,9 @@ package com.harby.halocraft.HaloItems;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.core.HaloItems;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class EnergieSword extends SwordItem {
 
     public EnergieSword(Properties properties) {
-        super(Tiers.DIAMOND, 3, -2.4F, properties);
+        super(Tiers.DIAMOND, 5, -2.4F, properties);
         HaloItems.HALO_ITEMS.add(this);
     }
 
@@ -50,6 +52,7 @@ public class EnergieSword extends SwordItem {
 
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+        if (count < 1) ((Player) entity).sweepAttack();
         if (!entity.level().isClientSide() && count < 1) {
             entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 1, true, false, true));
             entity.hurtMarked = true;
@@ -58,6 +61,7 @@ public class EnergieSword extends SwordItem {
                 stack.hurtAndBreak(1, entity, (player) -> player.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
         }
+
     }
 
     @Override
@@ -68,6 +72,8 @@ public class EnergieSword extends SwordItem {
                     HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 2));
                     player.getCooldowns().addCooldown(this, 5);
                     setOff(pStack, !isOff(pStack));
+                    if (!player.level().isClientSide())
+                        CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger(pEntity instanceof ServerPlayer ? (ServerPlayer) pEntity : null, pStack, pStack.getDamageValue());
                 }
             }
             if (!isOff(pStack) && !player.isCreative()) {
@@ -80,7 +86,7 @@ public class EnergieSword extends SwordItem {
 
     public boolean isOff(ItemStack pStack) {
         if (!pStack.getOrCreateTag().contains("off")) {
-            pStack.getOrCreateTag().putBoolean("off", true);
+            pStack.getOrCreateTag().putBoolean("off", false);
         }
         return pStack.getTag().getBoolean("off");
     }
@@ -99,5 +105,9 @@ public class EnergieSword extends SwordItem {
         return !isOff(pStack) && ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
     }
 
-
+    @Override
+    public void onCraftedBy(ItemStack pStack, Level pLevel, Player pPlayer) {
+        super.onCraftedBy(pStack, pLevel, pPlayer);
+        pStack.getOrCreateTag().putBoolean("off", true);
+    }
 }

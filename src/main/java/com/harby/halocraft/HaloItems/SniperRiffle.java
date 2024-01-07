@@ -37,4 +37,9 @@ public class SniperRiffle extends Gun{
     public int getWeaponReloadCooldown() {
         return 50;
     }
+
+    @Override
+    public boolean twoHands() {
+        return true;
+    }
 }
