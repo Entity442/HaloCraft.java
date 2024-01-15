@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -143,28 +144,32 @@ public abstract class Gun extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int value, boolean devalue) {
-        if (entity instanceof Player livingEntity) {
-            if (stack.getItem() instanceof Gun gunStack && (livingEntity.getMainHandItem() == stack || livingEntity.getOffhandItem() == stack)) {
+        if (entity instanceof Player player) {
+            if (stack.getItem() instanceof Gun gunStack && (player.getMainHandItem() == stack || player.getOffhandItem() == stack)) {
                 if (this.getAmmo(stack) < this.getMaxAmmo()) {
-                    if (HaloKeys.getKey(2) && isTwoHandAvailable(livingEntity)) {
-                        HaloCraft.sendMSGToServer(new HaloKeys(livingEntity.getId(), 2));
-                        if (livingEntity.getAbilities().instabuild) {
-                            this.reloadGun(livingEntity, stack);
+                    if (HaloKeys.getKey(2) && isTwoHandAvailable(player)) {
+                        HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 2));
+                        if (player.getAbilities().instabuild) {
+                            this.reloadGun(player, stack);
                         } else {
-                            ItemStack stack1 = lookForAmmo(livingEntity);
+                            ItemStack stack1 = lookForAmmo(player);
                             if (stack1 != ItemStack.EMPTY) {
                                 stack1.shrink(1);
                                 this.setAmmoType(stack, getAmmunition(stack1.getItem()));
-                                this.reloadGun(livingEntity, stack);
+                                this.reloadGun(player, stack);
                             }
                         }
                     }
                 }
-                if (!isTwoHandAvailable(livingEntity) && gunStack.twoHands()) {
-                    livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 1, false, false, true));
+                if (HaloKeys.getKey(3) && isTwoHandAvailable(player)) {
+                    HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 3));
+                    ItemUtils.startUsingInstantly(level, player, player.getUsedItemHand());
+                }
+                if (!isTwoHandAvailable(player) && gunStack.twoHands()) {
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 1, false, false, true));
                 }
             }
-            this.isReloading = livingEntity.getCooldowns().isOnCooldown(this);
+            this.isReloading = player.getCooldowns().isOnCooldown(this);
             if (this.isShooting) {
                 this.shootingTicks++;
                 if (this.shootingTicks >= this.flashTicks()) {
