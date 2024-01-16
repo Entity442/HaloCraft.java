@@ -2,6 +2,7 @@ package com.harby.halocraft.core;
 
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloItems.*;
+import com.harby.halocraft.core.projectiles.BaseAmmo;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -31,16 +32,16 @@ public class HaloItems {
     public  static final RegistryObject<TestArmor> TEST4 = ITEMS.register("test4",
             () -> new TestArmor(HaloBaseArmor.Type.BOOTS,new Item.Properties().durability(100)));
 
-    public  static final RegistryObject<BulletItem> BULLET = ITEMS.register("bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> EXPLOSIVE_BULLET = ITEMS.register("explosive_bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> FIRE_BULLET = ITEMS.register("fire_bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> FROZEN_BULLET = ITEMS.register("frozen_bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
-            () -> new BulletItem( new Item.Properties()));
+    public  static final RegistryObject<BaseAmmo> BULLET = ITEMS.register("bullet",
+            () -> new BaseAmmo( new Item.Properties()));
+    public  static final RegistryObject<BaseAmmo> EXPLOSIVE_BULLET = ITEMS.register("explosive_bullet",
+            () -> new BaseAmmo( new Item.Properties()));
+    public  static final RegistryObject<BaseAmmo> FIRE_BULLET = ITEMS.register("fire_bullet",
+            () -> new BaseAmmo( new Item.Properties()));
+    public  static final RegistryObject<BaseAmmo> FROZEN_BULLET = ITEMS.register("frozen_bullet",
+            () -> new BaseAmmo( new Item.Properties()));
+    public  static final RegistryObject<BaseAmmo> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
+            () -> new BaseAmmo( new Item.Properties()));
 
 
     public  static final RegistryObject<AssaultRifle> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",
