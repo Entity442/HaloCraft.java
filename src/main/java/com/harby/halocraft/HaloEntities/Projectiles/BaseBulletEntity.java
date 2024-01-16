@@ -40,7 +40,7 @@ public class BaseBulletEntity extends Projectile {
         double d0 = (double) blockpos.getX() + 0.5D;
         double d1 = (double) blockpos.getY() + 1.5D;
         double d2 = (double) blockpos.getZ() + 0.5D;
-        this.moveTo(d0, d1, d2, livingEntity.getYRot(), this.getXRot());
+        this.moveTo(d0, d1, d2, livingEntity.getYRot(), livingEntity.getXRot());
     }
 
 
