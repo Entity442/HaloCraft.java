@@ -12,7 +12,7 @@ public class SniperRiffle extends Gun{
     public static final float ZOOM_FOV_MODIFIER = 0.1F;
     private final boolean golden;
     public SniperRiffle(Properties properties,boolean gold) {
-        super(properties);
+        super(properties, ammoType);
         this.golden = gold;
     }
 

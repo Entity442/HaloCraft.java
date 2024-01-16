@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 
 public class AssaultRifle extends Gun{
     public AssaultRifle(Properties properties) {
-        super(properties);
+        super(properties, ammoType);
     }
 
     @Override
