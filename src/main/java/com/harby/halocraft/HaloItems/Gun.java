@@ -2,6 +2,8 @@ package com.harby.halocraft.HaloItems;
 
 import com.google.common.base.Predicate;
 import com.harby.halocraft.HaloCraft;
+import com.harby.halocraft.core.projectiles.AmmoTypes;
+import com.harby.halocraft.core.projectiles.BaseAmmo;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.core.HaloItems;
 import net.minecraft.ChatFormatting;
@@ -29,15 +31,16 @@ public abstract class Gun extends Item {
     private boolean isReloading = false;
     private boolean isShooting = false;
     private int shootingTicks = 0;
+    private final AmmoTypes ammoType;
 
-    public Gun(Properties properties) {
+    public Gun(Properties properties, AmmoTypes ammoType) {
         super(properties.stacksTo(1));
+        this.ammoType = ammoType;
         HaloItems.HALO_ITEMS.add(this);
         HaloItems.GUNS_ITEMS.add(this);
     }
-
     public static final Predicate<ItemStack> AMMO = (stack) -> {
-        return stack.getItem() instanceof BulletItem;
+        return stack.getItem() instanceof BaseAmmo;
     };
 
     @Override
@@ -204,5 +207,9 @@ public abstract class Gun extends Item {
         return (pPlayer.getItemInHand(InteractionHand.MAIN_HAND) == ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof Gun)
                 ||
                 (pPlayer.getItemInHand(InteractionHand.OFF_HAND) == ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof Gun);
+    }
+
+    public AmmoTypes getAmmoType() {
+        return ammoType;
     }
 }
