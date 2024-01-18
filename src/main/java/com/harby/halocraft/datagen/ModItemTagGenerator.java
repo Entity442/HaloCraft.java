@@ -20,7 +20,7 @@ public class ModItemTagGenerator extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(HaloTags.Items.BULLETS)
-                .add(HaloItems.BULLET.get())
+                .add(HaloItems.BASIC_BULLET.get())
                 .add(HaloItems.EXPLOSIVE_BULLET.get())
                 .add(HaloItems.FIRE_BULLET.get())
                 .add(HaloItems.FROZEN_BULLET.get())
