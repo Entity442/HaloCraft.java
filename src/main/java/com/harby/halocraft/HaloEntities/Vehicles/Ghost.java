@@ -6,6 +6,7 @@ import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.core.HaloConfig;
 import com.harby.halocraft.core.HaloEntities;
+import com.harby.halocraft.core.projectiles.AmmoList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -17,8 +18,6 @@ public class Ghost extends BasicVehicleEntity {
         super(HaloEntities.GHOST.get(), level);
         this.setMaxUpStep(1.3F);
     }
-
-
 
     @Override
     public boolean isHoveringVehicle() {
@@ -50,16 +49,17 @@ public class Ghost extends BasicVehicleEntity {
     public void tick() {
         super.tick();
         Player player = (Player) this.getFirstPassenger();
-        if (player != null && HaloKeys.getKey(3) && shooting_ticks < 2){
+        if (player == null) return;
+        if (HaloKeys.getKey(3) && shooting_ticks < 2){
             shooting_ticks = 10;
             HaloCraft.sendMSGToServer(new HaloKeys(this.getId(), player.getId(), 3));
         }
-        if (player != null && this.shooting_ticks > 0){
+        if (this.shooting_ticks > 0){
             --shooting_ticks;
             if (this.tickCount % 5 != 0){
-                PlasmaProjectileEntity bulletEntity = new PlasmaProjectileEntity(this.level(),this);
+                PlasmaProjectileEntity bulletEntity = new PlasmaProjectileEntity(this.level(),this, AmmoList.PlASMA_BALL);
                 bulletEntity.setOwner(player);
-                bulletEntity.setBaseDamage(10.0F);
+                bulletEntity.setDamage(10.0F);
                 bulletEntity.setTemperature(500);
                 bulletEntity.setColor(3113940);
                 bulletEntity.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 3.0F, 1.0F);
