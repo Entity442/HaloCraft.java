@@ -1,9 +1,9 @@
 package com.harby.halocraft.HaloItems;
 
-import com.google.common.base.Predicate;
 import com.harby.halocraft.HaloCraft;
+import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
+import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
-import com.harby.halocraft.core.projectiles.BaseAmmo;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.core.HaloItems;
 import net.minecraft.ChatFormatting;
@@ -23,30 +23,43 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class Gun extends Item {
+public class Gun extends Item {
     private boolean isReloading = false;
     private boolean isShooting = false;
     private int shootingTicks = 0;
+    private final int shootingDelay;
+    private final int reloadCooldown;
+    private final int maxAmmo;
+    private final boolean twoHand;
+    private final float damage;
+    private final int range;
     private final AmmoTypes ammoType;
 
-    public Gun(Properties properties, AmmoTypes ammoType) {
+    public Gun(Properties properties, boolean twoHand, AmmoTypes ammoType, int maxAmmo, int shootingDelay, int reloadCooldown, float damage, int range) {
         super(properties.stacksTo(1));
+        this.shootingDelay = shootingDelay;
+        this.reloadCooldown = reloadCooldown;
+        this.maxAmmo = maxAmmo;
+        this.twoHand = twoHand;
         this.ammoType = ammoType;
+        this.damage = damage;
+        this.range = range;
         HaloItems.HALO_ITEMS.add(this);
         HaloItems.GUNS_ITEMS.add(this);
     }
-    public static final Predicate<ItemStack> AMMO = (stack) -> {
-        return stack.getItem() instanceof BaseAmmo;
-    };
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player livingEntity, InteractionHand hand) {
         ItemStack itemstack = livingEntity.getItemInHand(hand);
         if (this.twoHands() && !isTwoHandAvailable(livingEntity)) {
+            return InteractionResultHolder.fail(itemstack);
+        }
+        if (this.isShooting) {
             return InteractionResultHolder.fail(itemstack);
         }
         livingEntity.awardStat(Stats.ITEM_USED.get(this));
@@ -56,23 +69,42 @@ public abstract class Gun extends Item {
 
 
     @Override
-    public int getUseDuration(ItemStack p_41454_) {
+    public int getUseDuration(@NotNull ItemStack pItemStack) {
         return 72000;
     }
 
-    public abstract int getShootingDelay();
+    public int getShootingDelay() {
+        return this.shootingDelay;
+    }
 
-    public abstract boolean twoHands();
+    public boolean twoHands() {
+        return this.twoHand;
+    }
 
-    public abstract void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack);
+    public int getMaxAmmo() {
+        return this.maxAmmo;
+    }
 
-    public abstract int getMaxAmmo();
+    public int getWeaponReloadCooldown() {
+        return this.reloadCooldown;
+    }
+    public AmmoTypes getAmmoType() {
+        return ammoType;
+    }
 
-    public abstract int getWeaponReloadCooldown();
+    public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
+        if (!level.isClientSide) {
+            AmmoList ammo = this.getAmmoType(stack);
+            BaseProjectileEntity bulletEntity = ammo.getType().getClassBullet().create(level, livingEntity, ammo);
+            bulletEntity.setDamage(this.getDamage());
+            bulletEntity.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, 6.0F, 1.0F);
+            level.addFreshEntity(bulletEntity);
+        }
+    }
 
-    public void reloadGun(Player player, ItemStack stack) {
+    public void reloadGun(Player player, ItemStack stack, int ammo) {
         player.getCooldowns().addCooldown(this, this.getWeaponReloadCooldown());
-        this.setAmmo(stack, getMaxAmmo());
+        this.setAmountAmmoStored(stack, Math.min(this.getMaxAmmo(), this.getAmountAmmoStored(stack) + ammo));
     }
 
     public boolean isReloading() {
@@ -83,25 +115,36 @@ public abstract class Gun extends Item {
         return this.isShooting;
     }
 
-
-    public int getAmmo(ItemStack stack) {
+    /**
+     * get the amount of ammo currently stored in the gun
+     */
+    public int getAmountAmmoStored(ItemStack stack) {
         CompoundTag compoundtag = stack.getTag();
         return compoundtag != null ? compoundtag.getInt("ammo") : 0;
     }
 
-    public void setAmmo(ItemStack stack, int value) {
-        CompoundTag compoundtag = stack.getOrCreateTag();
-        compoundtag.putInt("ammo", value);
+    /**
+     * set the amount of ammo stored in the gun
+     */
+    public void setAmountAmmoStored(ItemStack gunStack, int amount) {
+        CompoundTag compoundtag = gunStack.getOrCreateTag();
+        compoundtag.putInt("ammo", amount);
     }
 
-    public int getAmmoType(ItemStack stack) {
-        CompoundTag compoundtag = stack.getTag();
-        return compoundtag != null ? compoundtag.getInt("type") : 0;
+    /**
+     * get the ammo type currently use by the gun
+     */
+    public AmmoList getAmmoType(ItemStack gunStack) {
+        CompoundTag compoundtag = gunStack.getTag();
+        return compoundtag != null ? AmmoList.valueOf(compoundtag.getString("type")) : AmmoList.NONE;
     }
 
-    public void setAmmoType(ItemStack stack, int value) {
+    /**
+     * set the ammo type currently use by the gun
+     */
+    public void setAmmoType(ItemStack stack, AmmoList ammo) {
         CompoundTag compoundtag = stack.getOrCreateTag();
-        compoundtag.putInt("type", value);
+        compoundtag.putString("type", ammo.name());
     }
 
     @Override
@@ -109,11 +152,11 @@ public abstract class Gun extends Item {
         if (va % this.getShootingDelay() != 0) {
             return;
         }
-        if (this.getAmmo(stack) > 0) {
+        if (this.getAmountAmmoStored(stack) > 0) {
             this.isShooting = true;
             this.shotProjectile(level, livingEntity, stack);
-            this.setAmmo(stack, this.getAmmo(stack) - 1);
-            livingEntity.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 1.0F, 1.0F);
+            this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
+            livingEntity.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 0.5F, 1.0F);
         } else {
             if (livingEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal("Out of Ammo"), true);
@@ -124,16 +167,18 @@ public abstract class Gun extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        components.add(Component.literal("Ammo: " + this.getAmmo(itemStack) + "/" + getMaxAmmo()).withStyle(ChatFormatting.RED));
-        components.add(Component.literal("Ammo type: ").withStyle(ChatFormatting.YELLOW));
+        components.add(Component.literal("Ammo: " + this.getAmountAmmoStored(itemStack) + "/" + getMaxAmmo()).withStyle(ChatFormatting.RED));
+        components.add(Component.literal("Ammo type: " + this.getAmountAmmoStored(itemStack)).withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(itemStack, level, components, flag);
     }
 
+    /**
+     * Looks for ammo in the player's inventory.
+     */
     public ItemStack lookForAmmo(Player player) {
-        int size = player.getInventory().getContainerSize();
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i <= player.getInventory().getContainerSize(); i++) {
             ItemStack itemStack = player.getInventory().getItem(i);
-            if (AMMO.test(itemStack)) {
+            if (itemStack.getItem() instanceof AmmoItem ammo && ammo.isValidGun(this)) {
                 return itemStack;
             }
         }
@@ -149,18 +194,19 @@ public abstract class Gun extends Item {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int value, boolean devalue) {
         if (entity instanceof Player player) {
             if (stack.getItem() instanceof Gun gunStack && (player.getMainHandItem() == stack || player.getOffhandItem() == stack)) {
-                if (this.getAmmo(stack) < this.getMaxAmmo()) {
+                if (this.getAmountAmmoStored(stack) < this.getMaxAmmo()) {
                     if (HaloKeys.getKey(2) && isTwoHandAvailable(player)) {
                         HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 2));
-                        if (player.getAbilities().instabuild) {
-                            this.reloadGun(player, stack);
-                        } else {
-                            ItemStack stack1 = lookForAmmo(player);
-                            if (stack1 != ItemStack.EMPTY) {
-                                stack1.shrink(1);
-                                this.setAmmoType(stack, getAmmunition(stack1.getItem()));
-                                this.reloadGun(player, stack);
+                        ItemStack ammoStack = lookForAmmo(player);
+                        if (ammoStack.getItem() instanceof AmmoItem ammo && ammo.getBullet() == this.getAmmoType(stack)) {
+                            int ammoAdditional = Math.min(this.getMaxAmmo() - this.getAmountAmmoStored(stack), ammoStack.getCount());
+                            if (player.isCreative()) {
+                                ammoAdditional = this.getMaxAmmo();
+                            } else {
+                                ammoStack.shrink(ammoAdditional);
                             }
+                            this.setAmmoType(stack, ammo.getBullet());
+                            this.reloadGun(player, stack, ammoAdditional);
                         }
                     }
                 }
@@ -184,24 +230,6 @@ public abstract class Gun extends Item {
         super.inventoryTick(stack, level, entity, value, devalue);
     }
 
-    public int getAmmunition(Item item) {
-        if (AmmoTypes.BASE_BULLET.compareItem(item)) {
-            return AmmoTypes.BASE_BULLET.getValue();
-        }
-        if (AmmoTypes.FIRE_BULLET.compareItem(item)) {
-            return AmmoTypes.FIRE_BULLET.getValue();
-        }
-        if (AmmoTypes.PENETRATING_BULLET.compareItem(item)) {
-            return AmmoTypes.PENETRATING_BULLET.getValue();
-        }
-        if (AmmoTypes.EXPLOSIVE_BULLET.compareItem(item)) {
-            return AmmoTypes.EXPLOSIVE_BULLET.getValue();
-        }
-        if (AmmoTypes.FROZEN_BULLET.compareItem(item)) {
-            return AmmoTypes.FROZEN_BULLET.getValue();
-        }
-        return 0;
-    }
 
     public boolean isTwoHandAvailable(Player pPlayer) {
         return (pPlayer.getItemInHand(InteractionHand.MAIN_HAND) == ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof Gun)
@@ -209,7 +237,11 @@ public abstract class Gun extends Item {
                 (pPlayer.getItemInHand(InteractionHand.OFF_HAND) == ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof Gun);
     }
 
-    public AmmoTypes getAmmoType() {
-        return ammoType;
+    public float getDamage() {
+        return damage;
+    }
+
+    public int getRange() {
+        return range;
     }
 }
