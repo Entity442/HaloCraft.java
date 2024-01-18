@@ -3,8 +3,8 @@ package com.harby.halocraft.core;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.Alien.Grunt;
 import com.harby.halocraft.HaloEntities.Alien.Moa;
-import com.harby.halocraft.HaloEntities.Projectiles.BaseBulletEntity;
 import com.harby.halocraft.HaloEntities.Projectiles.BeamEntity;
+import com.harby.halocraft.HaloEntities.Projectiles.BulletEntity;
 import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
 import com.harby.halocraft.HaloEntities.Vehicles.Banshe;
 import com.harby.halocraft.HaloEntities.Vehicles.CarEntity;
@@ -23,6 +23,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class HaloEntities {
     public static DeferredRegister<EntityType<?>> HALO_ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,
             HaloCraft.MODID);
+
     public static void register(IEventBus eventBus) {
         HALO_ENTITIES.register(eventBus);
     }
@@ -54,17 +55,16 @@ public class HaloEntities {
             () -> EntityType.Builder.of((EntityType<F_19> entityType, Level level) -> new F_19(level), MobCategory.MISC).sized(2f, 2f)
                     .build(new ResourceLocation(HaloCraft.MODID, "f29").toString()));
 
-    public static final RegistryObject<EntityType<BaseBulletEntity>> BULLET = register("bullet",
-            EntityType.Builder.of((EntityType<BaseBulletEntity> entityType, Level level) -> new BaseBulletEntity(level), MobCategory.MISC)
+    public static final RegistryObject<EntityType<BulletEntity>> BULLET = register("bullet_projectile",
+            EntityType.Builder.of((EntityType<BulletEntity> entityType, Level level) -> new BulletEntity(level, entityType), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
 
-    public static final RegistryObject<EntityType<BeamEntity>> BEAM = register("beam",
+    public static final RegistryObject<EntityType<BeamEntity>> BEAM = register("beam_projectile",
             EntityType.Builder.of((EntityType<BeamEntity> entityType, Level level) -> new BeamEntity(level), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(1f, 1f));
 
-
-    public static final RegistryObject<EntityType<PlasmaProjectileEntity>> LASER = register("laser",
-            EntityType.Builder.of((EntityType<PlasmaProjectileEntity> entityType, Level level) -> new PlasmaProjectileEntity(level), MobCategory.MISC)
+    public static final RegistryObject<EntityType<PlasmaProjectileEntity>> PLASMA_BALL = register("plasma_projectile",
+            EntityType.Builder.of((EntityType<PlasmaProjectileEntity> entityType, Level level) -> new PlasmaProjectileEntity(level, entityType), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
 
 }
