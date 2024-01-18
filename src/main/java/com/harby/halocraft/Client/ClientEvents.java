@@ -44,7 +44,7 @@ public class ClientEvents {
         event.registerEntityRenderer(HaloEntities.BANSHE.get(), BansheRenderer::new);
         event.registerEntityRenderer(HaloEntities.F29.get(), F_19Renderer::new);
         event.registerEntityRenderer(HaloEntities.BULLET.get(), BulletRenderer::new);
-        event.registerEntityRenderer(HaloEntities.LASER.get(), PlasmaProjectileRenderer::new);
+        event.registerEntityRenderer(HaloEntities.PLASMA_BALL.get(), PlasmaProjectileRenderer::new);
         event.registerEntityRenderer(HaloEntities.BEAM.get(), BeamRenderer::new);
 
         event.registerEntityRenderer(HaloEntities.GRUNT.get(), GruntRenderer::new);
