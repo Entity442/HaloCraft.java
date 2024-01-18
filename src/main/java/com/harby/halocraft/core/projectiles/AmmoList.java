@@ -1,11 +1,17 @@
 package com.harby.halocraft.core.projectiles;
 
-import com.harby.halocraft.core.projectiles.bullet.Bullet;
-import com.harby.halocraft.core.projectiles.bullet.PenetratingBullet;
+import com.harby.halocraft.core.projectiles.bullet.*;
+import com.harby.halocraft.core.projectiles.plasma.PlasmaBall;
 
 public enum AmmoList {
-    BULLET(new Bullet(), AmmoTypes.BULLET),
-    PENETRATING_BULLET(new PenetratingBullet(), AmmoTypes.BULLET);
+    NONE(null, null),
+
+    NORMAL_BULLET(new Bullet(), AmmoTypes.BULLET),
+    PENETRATING_BULLET(new PenetratingBullet(), AmmoTypes.BULLET),
+    FIRE_BULLET(new FireBullet(), AmmoTypes.BULLET),
+    EXPLOSIVE_BULLET(new ExplosiveBullet(), AmmoTypes.BULLET),
+    FROZEN_BULLET(new FrozenBullet(), AmmoTypes.BULLET),
+    PlASMA_BALL(new PlasmaBall(), AmmoTypes.PLASMA);
 
     private final BaseAmmo ba;
     private final AmmoTypes at;
