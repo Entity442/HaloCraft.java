@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import com.harby.halocraft.HaloItems.interfaces.IHaloArmorItem;
 import com.harby.halocraft.HaloItems.interfaces.IHaloMaterials;
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
