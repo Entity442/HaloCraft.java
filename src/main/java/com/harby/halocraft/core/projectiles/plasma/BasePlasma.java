@@ -6,6 +6,8 @@ import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +23,10 @@ public abstract class BasePlasma extends BaseAmmo {
     @Override
     public void onMove(BaseProjectileEntity bullet) {
         bullet.level().addParticle(HaloParticles.PLASMA_TRAIL.get(), bullet.getX() - 0.2, bullet.getY() - 0.2, bullet.getZ() - 0.2, 1, 1, 1);
+    }
+    @Override
+    public DamageSource getDamageSource(DamageSources damageSources, BaseProjectileEntity bullet, LivingEntity owner) {
+        return damageSources.indirectMagic(bullet, owner);
     }
 
     @Override
