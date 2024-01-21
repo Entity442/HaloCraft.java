@@ -1,6 +1,5 @@
 package com.harby.halocraft.core.projectiles.bullet;
 
-import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
 import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
@@ -26,7 +25,6 @@ public abstract class BaseBullet extends BaseAmmo {
 
     @Override
     public void onMove(BaseProjectileEntity bullet) {
-        HaloCraft.LOGGER.info("Bullet on move");
-        bullet.level().addParticle(HaloParticles.PLASMA_TRAIL.get(), bullet.getX() - 0.2, bullet.getY() - 0.2, bullet.getZ() - 0.2, 1, 1, 1);
+        bullet.level().addAlwaysVisibleParticle(HaloParticles.PLASMA_TRAIL.get(), bullet.getX() - 0.2, bullet.getY() - 0.2, bullet.getZ() - 0.2, 1, 1, 1);
     }
 }
