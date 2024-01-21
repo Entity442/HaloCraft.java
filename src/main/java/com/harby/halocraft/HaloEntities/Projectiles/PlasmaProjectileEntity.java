@@ -24,11 +24,6 @@ public class PlasmaProjectileEntity extends BaseProjectileEntity {
         }
     }
 
-    @Override
-    public BaseProjectileEntity create(Level level, Entity livingEntity, AmmoList ammo) {
-        return new PlasmaProjectileEntity(level, livingEntity, ammo);
-    }
-
     public PlasmaProjectileEntity(Level level, EntityType<PlasmaProjectileEntity> entityType) {
         super(level, entityType);
     }

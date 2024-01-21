@@ -47,12 +47,6 @@ public abstract class BaseProjectileEntity extends Projectile {
         super(entityType, level);
     }
 
-    public abstract BaseProjectileEntity create(Level level, Entity livingEntity, AmmoList ammo);
-    /*public static BaseProjectileEntity create(Level level, Entity livingEntity, AmmoList ammo) {
-        return new BaseProjectileEntity(level, livingEntity, ammo);
-    }*/
-
-
     @Override
     protected void defineSynchedData() {
         this.entityData.define(TYPE_AMMO_DATA, AmmoList.NONE.name());

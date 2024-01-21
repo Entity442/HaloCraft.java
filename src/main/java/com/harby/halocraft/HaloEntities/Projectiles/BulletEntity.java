@@ -21,14 +21,6 @@ public class BulletEntity extends BaseProjectileEntity {
     public BulletEntity(Level level, EntityType<BulletEntity> entityType) {
         super(level, entityType);
     }
-    public BulletEntity(EntityType<BulletEntity> entityType) {
-        super(, entityType);
-    }
-
-    @Override
-    public BaseProjectileEntity create(Level level, Entity livingEntity, AmmoList ammo) {
-        return new BulletEntity(level, livingEntity, ammo);
-    }
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
