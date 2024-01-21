@@ -1,6 +1,9 @@
 package com.harby.halocraft.core.projectiles;
 
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -19,6 +22,10 @@ public abstract class BaseAmmo{
     public abstract double moveY(double posY, double movementY);
     public abstract double moveZ(double posZ, double movementZ);
     public abstract void onMove(BaseProjectileEntity bullet);
+
+    public DamageSource getDamageSource(DamageSources damageSources, BaseProjectileEntity bullet, LivingEntity owner) {
+        return damageSources.mobProjectile(bullet, owner);
+    }
 
     /**
      * needed to be filled in by subclasses
