@@ -5,7 +5,6 @@ import com.harby.halocraft.core.projectiles.plasma.PlasmaBall;
 
 public enum AmmoList {
     NONE(null, null),
-
     NORMAL_BULLET(new Bullet(), AmmoTypes.BULLET),
     PENETRATING_BULLET(new PenetratingBullet(), AmmoTypes.BULLET),
     FIRE_BULLET(new FireBullet(), AmmoTypes.BULLET),
