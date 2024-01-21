@@ -9,7 +9,6 @@ import com.harby.halocraft.core.projectiles.AmmoTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -93,11 +92,12 @@ public class Gun extends Item {
     }
 
     public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
-        HaloCraft.LOGGER.info(level.isClientSide + " " + this.getAmmoType(stack));
-        if (level.isClientSide && this.getAmmoType(stack) != AmmoList.NONE) {
+        HaloCraft.LOGGER.info(!level.isClientSide() + " " + this.getAmmoType(stack));
+        if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE) {
             AmmoList ammo = this.getAmmoType(stack);
             BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo);
             bulletEntity.setDamage(this.getDamage());
+            bulletEntity.setPos(livingEntity.getEyePosition());
             bulletEntity.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, 6.0F, 1.0F);
             level.addFreshEntity(bulletEntity);
             HaloCraft.LOGGER.info("Shooting"+bulletEntity.getProjectile().name());
@@ -151,20 +151,23 @@ public class Gun extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int va) {
-        if (va % this.getShootingDelay() != 0) {
+        this.shotProjectile(level, livingEntity, stack);
+        HaloCraft.LOGGER.info("ShootingDelay "+this.getShootingDelay());
+        return;
+        /*if (va % this.getShootingDelay() != 0 && !level.isClientSide()) {
             return;
         }
-        if (this.getAmountAmmoStored(stack) > 0) {
+        if (this.getAmountAmmoStored(stack) > 0 && this.getAmmoType(stack) != AmmoList.NONE) {
             this.isShooting = true;
             this.shotProjectile(level, livingEntity, stack);
             this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
-            livingEntity.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 0.5F, 1.0F);
+            //livingEntity.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 0.5F, 1.0F);
         } else {
             if (livingEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal("Out of Ammo"), true);
             }
         }
-        super.onUseTick(level, livingEntity, stack, va);
+        super.onUseTick(level, livingEntity, stack, va);*/
     }
 
     @Override
