@@ -43,6 +43,7 @@ public abstract class BaseProjectileEntity extends Projectile {
         this.moveTo(d0, d1, d2, livingEntity.getYRot(), livingEntity.getXRot());
         this.setProjectileType(ammo);
     }
+
     public BaseProjectileEntity(Level level, EntityType<? extends BaseProjectileEntity> entityType) {
         super(entityType, level);
     }
@@ -73,9 +74,11 @@ public abstract class BaseProjectileEntity extends Projectile {
     public AmmoList getProjectile() {
         return AmmoList.valueOf(this.entityData.get(TYPE_AMMO_DATA));
     }
+
     public void setFlightDuration(int ticks) {
         this.entityData.set(TYPE_FLIGHT_DURATION, ticks);
     }
+
     public int getFlightDuration() {
         return this.entityData.get(TYPE_FLIGHT_DURATION);
     }
@@ -93,39 +96,21 @@ public abstract class BaseProjectileEntity extends Projectile {
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        if (!this.level().isClientSide()) {
-            if (entityHitResult.getEntity() instanceof LivingEntity livingEntity) {
-                /*if (this.getProjectileType() == 0) {
-                    livingEntity.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage());
-                } else if (this.getProjectileType() == 1) {
-                    livingEntity.hurt(this.level().damageSources().explosion(this, this.getOwner()), getDamage());
-                    livingEntity.level().explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, Level.ExplosionInteraction.NONE);
-                } else if (this.getProjectileType() == 2) {
-                    livingEntity.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage());
-                    livingEntity.setSecondsOnFire(6);
-                } else if (this.getProjectileType() == 3) {
-                    livingEntity.hurt(this.level().damageSources().freeze(), getDamage());
-                } else if (this.getProjectileType() == 4) {
-                    livingEntity.hurt(this.level().damageSources().sonicBoom(this), getDamage());
-                }*/
-                BaseAmmo projectile = this.getProjectile().get();
-                projectile.onHitEntity(this, entityHitResult);
-            } else {
-                if (entityHitResult.getEntity() instanceof BasicVehicleEntity basicVehicle) {
-                    int damageMultipier = 1;
-                    if (this.getProjectile() == AmmoList.NORMAL_BULLET) {
-                        damageMultipier = 2;
-                    }
-                    if (this.getProjectile().getType() == AmmoTypes.PLASMA) {
-                        damageMultipier = 3;
-                    }
-                    basicVehicle.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage() * damageMultipier);
-                } else {
-                    entityHitResult.getEntity().hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage());
-                }
+        if (this.level().isClientSide()) return;
+        if (entityHitResult.getEntity() instanceof BasicVehicleEntity basicVehicle) {
+            int damageMultipier = 1;
+            if (this.getProjectile() == AmmoList.NORMAL_BULLET) {
+                damageMultipier = 2;
             }
-        } else {
-            super.onHitEntity(entityHitResult);
+            if (this.getProjectile().getType() == AmmoTypes.PLASMA) {
+                damageMultipier = 3;
+            }
+            basicVehicle.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), getDamage() * damageMultipier);
+        }
+        if (entityHitResult.getEntity() instanceof LivingEntity livingEntity) {
+            BaseAmmo projectile = this.getProjectile().get();
+            projectile.onHitEntity(this, entityHitResult);
+            livingEntity.hurt(projectile.getDamageSource(this.level().damageSources(), this, (LivingEntity) (this.getOwner())), getDamage());
         }
     }
 
@@ -176,6 +161,7 @@ public abstract class BaseProjectileEntity extends Projectile {
         double d2 = projectile.moveZ(this.getZ(), vec3.z);
         this.setPos(d0, d1, d2);
 
+        projectile.onMove(this);
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
             this.onHit(hitresult);
