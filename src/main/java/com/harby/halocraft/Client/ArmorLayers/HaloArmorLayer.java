@@ -1,12 +1,8 @@
 package com.harby.halocraft.Client.ArmorLayers;
 
-import com.harby.halocraft.Client.Models.GhostModelH;
-import com.harby.halocraft.Client.Models.PlasmaRingH;
-import com.harby.halocraft.Client.Models.unsc_helmetModel;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloItems.HaloBaseArmor;
 import com.harby.halocraft.HaloItems.interfaces.IHaloArmorItem;
-import com.harby.halocraft.core.HaloItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -33,10 +29,10 @@ public class HaloArmorLayer<E extends LivingEntity, M extends HumanoidModel<E>> 
     }
 
     public void addModelToItem(){
-        this.objects.add(new Triple<>(EquipmentSlot.HEAD, HaloItems.TEST.get(),new unsc_helmetModel<>()));
+        /*this.objects.add(new Triple<>(EquipmentSlot.HEAD, HaloItems.TEST.get(),new unsc_helmetModel<>()));
         this.objects.add(new Triple<>(EquipmentSlot.CHEST, HaloItems.TEST2.get(),new GhostModelH<>()));
         this.objects.add(new Triple<>(EquipmentSlot.LEGS, HaloItems.TEST3.get(),new PlasmaRingH<>()));
-        this.objects.add(new Triple<>(EquipmentSlot.FEET, HaloItems.TEST4.get(),new PlasmaRingH<>()));
+        this.objects.add(new Triple<>(EquipmentSlot.FEET, HaloItems.TEST4.get(),new PlasmaRingH<>()));*/
     }
 
     private ResourceLocation getTextureLocation(EquipmentSlot slot,IHaloArmorItem item){
