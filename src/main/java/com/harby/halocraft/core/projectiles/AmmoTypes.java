@@ -1,24 +1,25 @@
 package com.harby.halocraft.core.projectiles;
 
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
-import com.harby.halocraft.HaloEntities.Projectiles.BulletEntity;
-import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
-import com.harby.halocraft.core.HaloEntities;
-import net.minecraft.client.Minecraft;
+import com.harby.halocraft.core.projectiles.ammoType.BaseAmmoType;
+import com.harby.halocraft.core.projectiles.ammoType.BulletType;
+import com.harby.halocraft.core.projectiles.ammoType.PlasmaType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 public enum AmmoTypes {
-    PLASMA(new PlasmaProjectileEntity(Minecraft.getInstance().level, HaloEntities.PLASMA_BALL.get())),
-    BULLET(new BulletEntity(Minecraft.getInstance().level, HaloEntities.BULLET.get()));
+    PLASMA(new PlasmaType()),
+    BULLET(new BulletType());
     //BEAM(),//=> laser
     //ROCKET(),
     //NIDLER();
-    private final BaseProjectileEntity classBullet;
+    private final BaseAmmoType classBullet;
 
-    AmmoTypes(BaseProjectileEntity classBullet) {
+    AmmoTypes(BaseAmmoType classBullet) {
         this.classBullet = classBullet;
     }
 
-    public BaseProjectileEntity getClassBullet() {
-        return classBullet;
+    public BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo) {
+        return classBullet.createBullet(level, livingEntity, ammo);
     }
 }
