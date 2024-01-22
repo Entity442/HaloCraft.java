@@ -1,9 +1,15 @@
 package com.harby.halocraft;
 
+import com.harby.halocraft.HaloItems.HaloBaseArmor;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.core.*;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -31,6 +37,7 @@ public class HaloCraft
             .simpleChannel();
     public HaloCraft()
     {
+
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
         HaloItems.register(modEventBus);
@@ -38,7 +45,6 @@ public class HaloCraft
         HaloCreativeTab.register(modEventBus);
         HaloEntities.register(modEventBus);
         HaloParticles.register(modEventBus);
-
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, HaloConfig.SERVER_SPEC ,HaloCraft.MODID+"_config.toml");
         HaloConfig.loadConfig(HaloConfig.SERVER_SPEC, FMLPaths.CONFIGDIR.get().resolve(HaloCraft.MODID+"_config.toml").toString());
     }

@@ -5,19 +5,16 @@ import com.harby.halocraft.HaloItems.interfaces.IHaloMaterials;
 import net.minecraft.resources.ResourceLocation;
 
 public class TestArmor extends HaloBaseArmor{
-
-
-    public TestArmor(Type type, Properties properties) {
+    public TestArmor(Type type) {
         super(new IHaloMaterials() {
-            @Override
-            public int getDurability(Type type) {
-                return new int[]{100,200,300,400}[type.getSlot().getIndex()];
-            }
 
             @Override
             public int getDefense(Type type) {
                 return new int[]{3,6,9,12}[type.getSlot().getIndex()];
             }
+
+            @Override
+            public int getDurability(Type type) {return new int[]{100,100,100,100}[type.getSlot().getIndex()];}
 
             @Override
             public double getHealthModifier(Type type) {
@@ -48,7 +45,7 @@ public class TestArmor extends HaloBaseArmor{
             public double getToughnessModifier(Type type) {
                 return new int[]{2,2,2,2}[type.getSlot().getIndex()];
             }
-        }, type,true, properties);
+        }, type,true);
     }
 
 
@@ -71,4 +68,5 @@ public class TestArmor extends HaloBaseArmor{
     public ResourceLocation getBootTexture() {
         return new ResourceLocation(HaloCraft.MODID,"textures/entity/blank.png");
     }
+
 }

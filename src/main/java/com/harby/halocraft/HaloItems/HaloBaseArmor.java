@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -34,7 +35,7 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
     private final EquipmentSlot slot;
     private final HaloBaseArmor.Type type;
-    private boolean isShielded;
+    private final boolean isShielded;
     private int energyTicks;
     private final int defense;
     private final double health;
@@ -44,8 +45,8 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
     private final double knockRes;
     private final double toughness;
 
-    public HaloBaseArmor(IHaloMaterials materials, HaloBaseArmor.Type type,boolean shield, Properties properties) {
-        super(properties);
+    public HaloBaseArmor(IHaloMaterials materials, HaloBaseArmor.Type type,boolean shield) {
+        super(new Item.Properties().stacksTo(1).durability(materials.getDurability(type)));
         this.slot = type.slot;
         this.type = type;
         this.isShielded = shield;
@@ -97,7 +98,7 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
         private final EquipmentSlot slot;
         private final String name;
 
-        private Type(EquipmentSlot pSlot, String pName) {
+        Type(EquipmentSlot pSlot, String pName) {
             this.slot = pSlot;
             this.name = pName;
         }
@@ -165,4 +166,5 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
             this.energyTicks--;
         }
     }
+
 }
