@@ -15,10 +15,10 @@ public class EventBusEvents {
     public static void hurtArmor(LivingDamageEvent hurtEvent){
         if (hurtEvent.getEntity() instanceof Player player){
             for (int i: Inventory.ALL_ARMOR_SLOTS){
-                ItemStack stack = player.getInventory().getItem(i);
+                ItemStack stack = player.getInventory().armor.get(i);
                 if (stack.getItem() instanceof HaloBaseArmor){
-                    stack.hurtAndBreak(1,player, (p_35997_) -> {
-                        p_35997_.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i));
+                    stack.hurtAndBreak(1,player, (bool) -> {
+                        bool.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i));
                     });
                 }
             }
