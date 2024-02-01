@@ -55,17 +55,17 @@ public class HaloKeys {
 
 
     public static boolean getKey(int keyType){
-        if (keyType == 0) {
-            return Minecraft.getInstance().options.keyJump.isDown();
-        }
-        if (keyType == 1) {
-            return Minecraft.getInstance().options.keySprint.isDown();
-        }
-        if (keyType == 2) {
-            return HaloKeybinds.RELOAD_KEY.isDown();
-        }
-        if (keyType == 3) {
-            return HaloKeybinds.SHOOTING_KEY.isDown();
+        switch (keyType) {
+            case 0:
+                return Minecraft.getInstance().options.keyJump.isDown();
+            case 1:
+                return Minecraft.getInstance().options.keySprint.isDown();
+            case 2:
+                return HaloKeybinds.RELOAD_KEY.isDown();
+            case 3:
+                return HaloKeybinds.SHOOTING_KEY.isDown();
+            default:
+                // handle default case here
         }
         return false;
     }
