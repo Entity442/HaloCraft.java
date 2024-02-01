@@ -57,7 +57,7 @@ public class Ghost extends BasicVehicleEntity {
         if (this.shooting_ticks > 0){
             --shooting_ticks;
             if (this.tickCount % 5 != 0){
-                PlasmaProjectileEntity bulletEntity = new PlasmaProjectileEntity(this.level(),this, AmmoList.PlASMA_BALL);
+                PlasmaProjectileEntity bulletEntity = new PlasmaProjectileEntity(this.level(),this, AmmoList.PlASMA_BALL, 5.0F);
                 bulletEntity.setOwner(player);
                 bulletEntity.setDamage(10.0F);
                 bulletEntity.setTemperature(500);
