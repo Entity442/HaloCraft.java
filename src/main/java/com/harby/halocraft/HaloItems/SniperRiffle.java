@@ -10,7 +10,7 @@ public class SniperRiffle extends Gun {
     public static final float ZOOM_FOV_MODIFIER = 0.1F;
 
     public SniperRiffle(Properties properties, boolean golden) {
-        super(properties, true, AmmoTypes.BULLET, 4, 20, 200, golden ? 25.0f : 35.0f, 1000);
+        super(properties, true, AmmoTypes.BULLET, 4, 20, 200, golden ? 25.0f : 35.0f, 25);
     }
 
     public @NotNull UseAnim getUseAnimation(ItemStack pStack) {
