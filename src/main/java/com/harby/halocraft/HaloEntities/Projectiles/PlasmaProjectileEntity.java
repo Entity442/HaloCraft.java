@@ -17,8 +17,8 @@ public class PlasmaProjectileEntity extends BaseProjectileEntity {
     private static final EntityDataAccessor<Integer> TEMPERATURE =
             SynchedEntityData.defineId(PlasmaProjectileEntity.class, EntityDataSerializers.INT);
 
-    public PlasmaProjectileEntity(Level level, Entity livingEntity, AmmoList ammo) {
-        super(level, livingEntity, ammo, HaloEntities.PLASMA_BALL.get());
+    public PlasmaProjectileEntity(Level level, Entity livingEntity, AmmoList ammo, float speed) {
+        super(level, livingEntity, ammo, HaloEntities.PLASMA_BALL.get(), speed);
         if (ammo.getType() != AmmoTypes.PLASMA) {
             throw new IllegalArgumentException("PlasmaProjectileEntity can only be created with Plasma ammo.");
         }
