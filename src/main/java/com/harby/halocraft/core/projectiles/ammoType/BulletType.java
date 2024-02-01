@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 public class BulletType extends BaseAmmoType {
     @Override
-    public BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo) {
-        return new BulletEntity(level, livingEntity, ammo);
+    public BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo, float speed) {
+        return new BulletEntity(level, livingEntity, ammo, speed);
     }
 }
