@@ -11,8 +11,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
 public class BulletEntity extends BaseProjectileEntity {
-    public BulletEntity(Level level, Entity livingEntity, AmmoList ammo) {
-        super(level, livingEntity, ammo, HaloEntities.BULLET.get());
+    public BulletEntity(Level level, Entity livingEntity, AmmoList ammo, float speed) {
+        super(level, livingEntity, ammo, HaloEntities.BULLET.get(), speed);
         if (ammo.getType() != AmmoTypes.BULLET) {
             throw new IllegalArgumentException("BulletEntity can only be created with Bullet ammo.");
         }
