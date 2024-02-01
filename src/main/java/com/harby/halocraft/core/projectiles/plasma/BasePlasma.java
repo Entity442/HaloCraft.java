@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class BasePlasma extends BaseAmmo {
     @Override
@@ -22,8 +23,17 @@ public abstract class BasePlasma extends BaseAmmo {
 
     @Override
     public void onMove(BaseProjectileEntity bullet) {
-        bullet.level().addParticle(HaloParticles.PLASMA_TRAIL.get(), bullet.getX() - 0.2, bullet.getY() - 0.2, bullet.getZ() - 0.2, 1, 1, 1);
+        if (bullet instanceof PlasmaProjectileEntity plasmaBall) {
+            //this code allow more particules, so between the position at tick
+            double pTicks = 0d;
+            while (pTicks < 1d) {
+                Vec3 vec = (this.movement(plasmaBall.getPosition(0), plasmaBall.getShoutedPos(), plasmaBall.getShoutedDirection(), plasmaBall.tickCount - 1 + pTicks));
+                plasmaBall.level().addAlwaysVisibleParticle(HaloParticles.PLASMA_TRAIL.get(), vec.x, vec.y, vec.z, plasmaBall.getColor(), plasmaBall.getColor(), plasmaBall.getColor());
+                pTicks += 0.05d;
+            }
+        }
     }
+
     @Override
     public DamageSource getDamageSource(DamageSources damageSources, BaseProjectileEntity bullet, LivingEntity owner) {
         return damageSources.indirectMagic(bullet, owner);
@@ -51,16 +61,15 @@ public abstract class BasePlasma extends BaseAmmo {
         }
     }
 
-    @Override
-    public double moveX(double posX, double movementX) {
-        return posX+movementX;
-    }
-    @Override
-    public double moveY(double posY, double movementY) {
-        return posY+movementY-0.1; //gravity
-    }
-    @Override
-    public double moveZ(double posZ, double movementZ) {
-        return posZ+movementZ;
+    public Vec3 movement(Vec3 pos, Vec3 shoutedPos, Vec3 shoutedDirection, double tickCount) {
+        double x = shoutedPos.x;
+        double y = shoutedPos.y;
+        double z = shoutedPos.z;
+        x += shoutedDirection.x * tickCount;
+        y += shoutedDirection.y * tickCount;
+        z += shoutedDirection.z * tickCount;
+        //gravity: (here = -0.2 block / ticks)
+        y -= 0.1 * tickCount * tickCount;
+        return new Vec3(x, y, z);
     }
 }
