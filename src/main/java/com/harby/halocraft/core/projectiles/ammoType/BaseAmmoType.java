@@ -6,5 +6,5 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 public abstract class BaseAmmoType {
-    public abstract BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo);
+    public abstract BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo, float speed);
 }
