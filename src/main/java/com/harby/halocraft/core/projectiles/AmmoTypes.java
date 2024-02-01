@@ -19,7 +19,7 @@ public enum AmmoTypes {
         this.classBullet = classBullet;
     }
 
-    public BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo) {
-        return classBullet.createBullet(level, livingEntity, ammo);
+    public BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo, float speed) {
+        return classBullet.createBullet(level, livingEntity, ammo, speed);
     }
 }

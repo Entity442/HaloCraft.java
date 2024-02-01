@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 public class PlasmaType extends BaseAmmoType {
     @Override
-    public BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo) {
-        return new PlasmaProjectileEntity(level, livingEntity, ammo);
+    public BaseProjectileEntity createBullet(Level level, LivingEntity livingEntity, AmmoList ammo, float speed) {
+        return new PlasmaProjectileEntity(level, livingEntity, ammo, speed);
     }
 }
