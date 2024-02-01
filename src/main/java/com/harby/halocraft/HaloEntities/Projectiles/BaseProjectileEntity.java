@@ -1,11 +1,11 @@
 package com.harby.halocraft.HaloEntities.Projectiles;
 
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
+import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.HaloTags;
 import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -25,23 +25,29 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 public abstract class BaseProjectileEntity extends Projectile {
     private static final EntityDataAccessor<String> TYPE_AMMO_DATA =
             SynchedEntityData.defineId(BaseProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> TYPE_FLIGHT_DURATION =
             SynchedEntityData.defineId(BaseProjectileEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Vector3f> SHOUTED_POS =
+            SynchedEntityData.defineId(BaseProjectileEntity.class, EntityDataSerializers.VECTOR3);
+    private static final EntityDataAccessor<Vector3f> SHOUTED_DIRECTION =
+            SynchedEntityData.defineId(BaseProjectileEntity.class, EntityDataSerializers.VECTOR3);
     private float setBaseDamage;
 
-    public BaseProjectileEntity(Level level, Entity livingEntity, AmmoList ammo, EntityType<? extends BaseProjectileEntity> entityType) {
+    public BaseProjectileEntity(Level level, Entity livingEntity, AmmoList ammo, EntityType<? extends BaseProjectileEntity> entityType, double velocity) {
         super(entityType, level);
         this.setOwner(livingEntity);
-        BlockPos blockpos = livingEntity.blockPosition();
-        double d0 = (double) blockpos.getX() + 0.5D;
-        double d1 = (double) blockpos.getY() + 1.5D;
-        double d2 = (double) blockpos.getZ() + 0.5D;
-        this.moveTo(d0, d1, d2, livingEntity.getYRot(), livingEntity.getXRot());
         this.setProjectileType(ammo);
+        this.setShoutedPos(livingEntity.getEyePosition());
+        this.setShoutedDirection(-livingEntity.getYRot(), -livingEntity.getXRot(), velocity);
+        this.reapplyPosition();
+        this.level().addParticle(HaloParticles.PLASMA_TRAIL.get(), this.getX(), this.getY(), this.getZ(), 3, 1, 1);
+        //this.mo
+        this.setDeltaMovement(getProjectile().get().movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
     }
 
     public BaseProjectileEntity(Level level, EntityType<? extends BaseProjectileEntity> entityType) {
@@ -52,6 +58,8 @@ public abstract class BaseProjectileEntity extends Projectile {
     protected void defineSynchedData() {
         this.entityData.define(TYPE_AMMO_DATA, AmmoList.NONE.name());
         this.entityData.define(TYPE_FLIGHT_DURATION, 300);
+        this.entityData.define(SHOUTED_POS, new Vector3f(0, 0, 0));
+        this.entityData.define(SHOUTED_DIRECTION, new Vector3f(0, 0, 0));
     }
 
     @Override
@@ -64,8 +72,34 @@ public abstract class BaseProjectileEntity extends Projectile {
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("bullet_type", this.getProjectile().name());
         tag.putInt("flight_duration", this.getFlightDuration());
+        CompoundTag tagPos = new CompoundTag();
+        tagPos.putDouble("X", this.getShoutedPos().x);
+        tagPos.putDouble("Y", this.getShoutedPos().y);
+        tagPos.putDouble("Z", this.getShoutedPos().z);
+        tag.put("pos", tagPos);
+        CompoundTag tagDirection = new CompoundTag();
+        tagDirection.putDouble("X", this.getShoutedPos().x);
+        tagDirection.putDouble("Y", this.getShoutedPos().y);
+        tagDirection.putDouble("Z", this.getShoutedPos().z);
+        tag.put("direction", tagDirection);
     }
 
+    private void setShoutedPos(Vec3 pos) {
+        this.entityData.set(SHOUTED_POS, new Vector3f((float) pos.x, (float) pos.y, (float) pos.z));
+    }
+
+    public Vec3 getShoutedPos() {
+        return new Vec3(this.entityData.get(SHOUTED_POS));
+    }
+
+    private void setShoutedDirection(double rotX, double rotY, double velocity) {
+        this.entityData.set(SHOUTED_DIRECTION, new Vector3f(
+                (float) (Math.sin(Math.toRadians(rotX)) * velocity * Math.cos(Math.toRadians(rotY))), (float) (Math.sin(Math.toRadians(rotY)) * velocity), (float) (Math.cos(Math.toRadians(rotX)) * velocity * Math.cos(Math.toRadians(rotY)))));
+    }
+
+    public Vec3 getShoutedDirection() {
+        return new Vec3(this.entityData.get(SHOUTED_DIRECTION));
+    }
 
     private void setProjectileType(AmmoList ammo) {
         this.entityData.set(TYPE_AMMO_DATA, ammo.name());
@@ -85,14 +119,13 @@ public abstract class BaseProjectileEntity extends Projectile {
 
     @Override
     protected boolean canHitEntity(Entity entity) {
-        return entity != getOwner();
+        return entity != getOwner() || !(entity instanceof BaseProjectileEntity);
     }
 
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
-
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
@@ -111,30 +144,32 @@ public abstract class BaseProjectileEntity extends Projectile {
             BaseAmmo projectile = this.getProjectile().get();
             projectile.onHitEntity(this, entityHitResult);
             livingEntity.hurt(projectile.getDamageSource(this.level().damageSources(), this, (LivingEntity) (this.getOwner())), getDamage());
+            this.remove(RemovalReason.KILLED);
         }
     }
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        if (!level().isClientSide) {
-            boolean flag = false;
-            this.noPhysics = false;
-            BlockState state = this.level().getBlockState(result.getBlockPos());
-            if (state.is(HaloTags.Blocks.SHOOTING_THROUGH)) {
-                this.noPhysics = true;
-                flag = true;
-            }
-            if (state.is(HaloTags.Blocks.BREAK_ON_SHOOT)) {
-                level().destroyBlock(result.getBlockPos(), true, this.getOwner());
-                flag = true;
-            }
-            if (flag) {
-                this.discard();
-            } else {
-                BaseAmmo projectile = this.getProjectile().get();
-                projectile.onHitBlock(this, result);
-            }
+        if (this.level().isClientSide()) return;
+        boolean discard = false;
+        this.noPhysics = false;
+        BlockState state = this.level().getBlockState(result.getBlockPos());
+        if (state.is(HaloTags.Blocks.SHOOTING_THROUGH)) {
+            this.noPhysics = true;
+            discard = true;
+        }
+        if (state.is(HaloTags.Blocks.BREAK_ON_SHOOT)) {
+            level().destroyBlock(result.getBlockPos(), true, this.getOwner());
+            this.noPhysics = true;
+            discard = true;
+        }
+        if (discard) {
+            //this.discard();
+        } else {
+            BaseAmmo projectile = this.getProjectile().get();
+            projectile.onHitBlock(this, result);
+            this.remove(RemovalReason.KILLED);
         }
 
     }
@@ -147,7 +182,6 @@ public abstract class BaseProjectileEntity extends Projectile {
         this.setBaseDamage = value;
     }
 
-
     @Override
     public void tick() {
         super.tick();
@@ -155,13 +189,9 @@ public abstract class BaseProjectileEntity extends Projectile {
             this.remove(RemovalReason.DISCARDED);
         }
         BaseAmmo projectile = this.getProjectile().get();
-        Vec3 vec3 = this.getDeltaMovement();
-        double d0 = projectile.moveX(this.getX(), vec3.x);
-        double d1 = projectile.moveY(this.getY(), vec3.y);
-        double d2 = projectile.moveZ(this.getZ(), vec3.z);
-        this.setPos(d0, d1, d2);
-
         projectile.onMove(this);
+        if (this.level().isClientSide()) return;
+        this.setPos((projectile.movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount)));
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
             this.onHit(hitresult);
