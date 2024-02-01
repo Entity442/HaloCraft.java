@@ -36,10 +36,10 @@ public class Gun extends Item {
     private final int maxAmmo;
     private final boolean twoHand;
     private final float damage;
-    private final int range;
+    private final float speed;
     private final AmmoTypes ammoType;
 
-    public Gun(Properties properties, boolean twoHand, AmmoTypes ammoType, int maxAmmo, int shootingDelay, int reloadCooldown, float damage, int range) {
+    public Gun(Properties properties, boolean twoHand, AmmoTypes ammoType, int maxAmmo, int shootingDelay, int reloadCooldown, float damage, float speed) {
         super(properties.stacksTo(1));
         this.shootingDelay = shootingDelay;
         this.reloadCooldown = reloadCooldown;
@@ -47,7 +47,7 @@ public class Gun extends Item {
         this.twoHand = twoHand;
         this.ammoType = ammoType;
         this.damage = damage;
-        this.range = range;
+        this.speed = speed;
         HaloItems.HALO_ITEMS.add(this);
         HaloItems.GUNS_ITEMS.add(this);
     }
@@ -87,20 +87,19 @@ public class Gun extends Item {
     public int getWeaponReloadCooldown() {
         return this.reloadCooldown;
     }
+
     public AmmoTypes getAmmoType() {
         return ammoType;
     }
 
     public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
-        HaloCraft.LOGGER.info(!level.isClientSide() + " " + this.getAmmoType(stack));
         if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE) {
             AmmoList ammo = this.getAmmoType(stack);
-            BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo);
+            BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo, this.getSpeed());
             bulletEntity.setDamage(this.getDamage());
             bulletEntity.setPos(livingEntity.getEyePosition());
-            bulletEntity.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, 6.0F, 1.0F);
+            //bulletEntity.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, this.speed / 50f, 1.0F);
             level.addFreshEntity(bulletEntity);
-            HaloCraft.LOGGER.info("Shooting"+bulletEntity.getProjectile().name());
         }
     }
 
@@ -151,8 +150,11 @@ public class Gun extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int va) {
+        if (this.isShooting) {
+            return;
+        }
         this.shotProjectile(level, livingEntity, stack);
-        HaloCraft.LOGGER.info("ShootingDelay "+this.getShootingDelay());
+        HaloCraft.LOGGER.info("ShootingDelay " + this.getShootingDelay());
         return;
         /*if (va % this.getShootingDelay() != 0 && !level.isClientSide()) {
             return;
@@ -246,7 +248,7 @@ public class Gun extends Item {
         return damage;
     }
 
-    public int getRange() {
-        return range;
+    public float getSpeed() {
+        return speed;
     }
 }
