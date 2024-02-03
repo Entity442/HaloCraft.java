@@ -15,8 +15,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -41,13 +43,14 @@ public abstract class BaseProjectileEntity extends Projectile {
     public BaseProjectileEntity(Level level, Entity livingEntity, AmmoList ammo, EntityType<? extends BaseProjectileEntity> entityType, double velocity) {
         super(entityType, level);
         this.setOwner(livingEntity);
+        this.setPos(livingEntity.getEyePosition());
         this.setProjectileType(ammo);
         this.setShoutedPos(livingEntity.getEyePosition());
         this.setShoutedDirection(-livingEntity.getYRot(), -livingEntity.getXRot(), velocity);
         this.reapplyPosition();
-        this.level().addParticle(HaloParticles.PLASMA_TRAIL.get(), this.getX(), this.getY(), this.getZ(), 3, 1, 1);
+        this.level().addParticle(HaloParticles.PLASMA_TRAIL.get(), this.getX()+1, this.getY(), this.getZ(), 3, 1, 1);
         //this.mo
-        this.setDeltaMovement(getProjectile().get().movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
+        //this.setDeltaMovement(getProjectile().get().movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
     }
 
     public BaseProjectileEntity(Level level, EntityType<? extends BaseProjectileEntity> entityType) {
@@ -191,9 +194,38 @@ public abstract class BaseProjectileEntity extends Projectile {
         BaseAmmo projectile = this.getProjectile().get();
         projectile.onMove(this);
         if (this.level().isClientSide()) return;
-        this.setPos((projectile.movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount)));
-        HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-        if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
+        Vec3 posBefore = this.getPosition(0);
+        Vec3 posAfter = (projectile.movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
+
+        HitResult hitresult = this.level().clip(new ClipContext(posBefore, posAfter, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        if (hitresult.getType() != HitResult.Type.MISS) {
+            posAfter = hitresult.getLocation();
+        }
+        int entityCount = 0;
+        while (!this.isRemoved() && hitresult != null && hitresult.getType() != HitResult.Type.MISS && entityCount == 0) {
+            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(this.level(), this, posBefore, posAfter, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
+            if (entityhitresult != null) {
+                hitresult = entityhitresult;
+            }
+            if (hitresult.getType() == HitResult.Type.ENTITY) {
+                Entity entity = ((EntityHitResult) hitresult).getEntity();
+                Entity owner = this.getOwner();
+                if (entity instanceof Player && owner instanceof Player && !((Player) owner).canHarmPlayer((Player) entity)) {
+                    hitresult = null;
+                } else {
+                    entityCount++;
+                    posAfter = hitresult.getLocation();
+                }
+            }
+            if (hitresult != null && hitresult.getType() != HitResult.Type.MISS) {
+                if (net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult))
+                    break;
+                posAfter = hitresult.getLocation();
+            }
+            //hitresult = null;
+        }
+        this.setPos(posAfter);
+        if (hitresult != null && hitresult.getType() != HitResult.Type.MISS) {
             this.onHit(hitresult);
         }
     }
