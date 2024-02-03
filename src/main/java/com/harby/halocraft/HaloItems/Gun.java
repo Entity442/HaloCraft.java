@@ -9,9 +9,7 @@ import com.harby.halocraft.core.projectiles.AmmoTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +17,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class Gun extends Item {
-    private boolean isReloading = false;
-    private boolean isShooting = false;
     private int shootingTicks = 0;
     private final int shootingDelay;
     private final int reloadCooldown;
@@ -52,19 +47,19 @@ public class Gun extends Item {
         HaloItems.GUNS_ITEMS.add(this);
     }
 
-    @Override
+    /*@Override
     public InteractionResultHolder<ItemStack> use(Level level, Player livingEntity, InteractionHand hand) {
         ItemStack itemstack = livingEntity.getItemInHand(hand);
         if (this.twoHands() && !isTwoHandAvailable(livingEntity)) {
             return InteractionResultHolder.fail(itemstack);
         }
-        if (this.isShooting) {
+        if (this.isShooting()) {
             return InteractionResultHolder.fail(itemstack);
         }
         livingEntity.awardStat(Stats.ITEM_USED.get(this));
         livingEntity.startUsingItem(hand);
         return InteractionResultHolder.consume(itemstack);
-    }
+    }*/
 
 
     @Override
@@ -93,27 +88,29 @@ public class Gun extends Item {
     }
 
     public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
-        if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE) {
+        if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE && this.getAmountAmmoStored(stack) > 0 && !this.isShooting()) {
             AmmoList ammo = this.getAmmoType(stack);
             BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo, this.getSpeed());
             bulletEntity.setDamage(this.getDamage());
-            bulletEntity.setPos(livingEntity.getEyePosition());
-            //bulletEntity.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, this.speed / 50f, 1.0F);
             level.addFreshEntity(bulletEntity);
+            HaloCraft.LOGGER.info("new: "+bulletEntity.toString());
+            this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
+            if (this.getAmountAmmoStored(stack) == 0) {
+                this.setAmmoType(stack, AmmoList.NONE);
+                if (livingEntity instanceof Player player) {
+                    player.displayClientMessage(Component.translatable("message.halocraft.out_of_ammo"), true);
+                }
+            }
+            this.shootingTicks = this.getShootingDelay();
         }
     }
 
-    public void reloadGun(Player player, ItemStack stack, int ammo) {
-        player.getCooldowns().addCooldown(this, this.getWeaponReloadCooldown());
-        this.setAmountAmmoStored(stack, Math.min(this.getMaxAmmo(), this.getAmountAmmoStored(stack) + ammo));
-    }
-
-    public boolean isReloading() {
-        return this.isReloading;
+    public boolean isReloading(Player player) {
+        return player.getCooldowns().isOnCooldown(this);
     }
 
     public boolean isShooting() {
-        return this.isShooting;
+        return this.shootingTicks != 0;
     }
 
     /**
@@ -150,12 +147,6 @@ public class Gun extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int va) {
-        if (this.isShooting) {
-            return;
-        }
-        this.shotProjectile(level, livingEntity, stack);
-        HaloCraft.LOGGER.info("ShootingDelay " + this.getShootingDelay());
-        return;
         /*if (va % this.getShootingDelay() != 0 && !level.isClientSide()) {
             return;
         }
@@ -192,17 +183,20 @@ public class Gun extends Item {
         return ItemStack.EMPTY;
     }
 
-    public int flashTicks() {
-        return 10;
-    }
-
-
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int value, boolean devalue) {
         if (entity instanceof Player player) {
+            super.inventoryTick(stack, level, entity, value, devalue);
+            if (this.isShooting()) {
+                this.shootingTicks--;
+            }
             if (stack.getItem() instanceof Gun gunStack && (player.getMainHandItem() == stack || player.getOffhandItem() == stack)) {
-                if (this.getAmountAmmoStored(stack) < this.getMaxAmmo()) {
-                    if (HaloKeys.getKey(2) && isTwoHandAvailable(player)) {
+                if (!isTwoHandAvailable(player) && gunStack.twoHands()) {
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 1, false, false, true));
+                    return;
+                }
+                if (HaloKeys.getKey(2) && isTwoHandAvailable(player)) {//reload key
+                    if (this.getAmountAmmoStored(stack) < this.getMaxAmmo()) {
                         HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 2));
                         ItemStack ammoStack = lookForAmmo(player);
                         if (ammoStack.getItem() instanceof AmmoItem ammo && (ammo.getBullet() == this.getAmmoType(stack) || this.getAmmoType(stack) == AmmoList.NONE || this.getAmountAmmoStored(stack) == 0)) {
@@ -212,31 +206,24 @@ public class Gun extends Item {
                             } else {
                                 ammoStack.shrink(ammoAdditional);
                             }
+                            //reload gun
+                            player.getCooldowns().addCooldown(this, this.getWeaponReloadCooldown());
                             this.setAmmoType(stack, ammo.getBullet());
-                            this.reloadGun(player, stack, ammoAdditional);
+                            this.setAmountAmmoStored(stack, ammoAdditional);
                         }
                     }
                 }
-                if (HaloKeys.getKey(3) && isTwoHandAvailable(player)) {
-                    HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 3));
-                    ItemUtils.startUsingInstantly(level, player, player.getUsedItemHand());
-                }
-                if (!isTwoHandAvailable(player) && gunStack.twoHands()) {
-                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 1, false, false, true));
-                }
-            }
-            this.isReloading = player.getCooldowns().isOnCooldown(this);
-            if (this.isShooting) {
-                this.shootingTicks++;
-                if (this.shootingTicks >= this.flashTicks()) {
-                    this.isShooting = false;
-                    this.shootingTicks = 0;
+                if (HaloKeys.getKey(3) && isTwoHandAvailable(player)) {//shoot key
+                    if (this.getAmountAmmoStored(stack) == 0) {
+                        player.displayClientMessage(Component.translatable("message.halocraft.out_of_ammo"), true);
+                    } else {
+                        HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 3));
+                        this.shotProjectile(level, player, stack);
+                    }
                 }
             }
         }
-        super.inventoryTick(stack, level, entity, value, devalue);
     }
-
 
     public boolean isTwoHandAvailable(Player pPlayer) {
         return (pPlayer.getItemInHand(InteractionHand.MAIN_HAND) == ItemStack.EMPTY && pPlayer.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof Gun)
