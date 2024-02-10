@@ -37,9 +37,9 @@ public class HaloItems {
     public static final RegistryObject<Gun> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",
             () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 60, 2, 60, 7.0f, 15));
     public static final RegistryObject<SniperRiffle> SNIPER_RIFFLE = ITEMS.register("sniper_riffle",
-            () -> new SniperRiffle(new Item.Properties(), false));
+            () -> new SniperRiffle(new Item.Properties(), false, 0.1f));
     public static final RegistryObject<SniperRiffle> GOLDEN_SNIPER_RIFFLE = ITEMS.register("golden_sniper_riffle",
-            () -> new SniperRiffle(new Item.Properties(), true));
+            () -> new SniperRiffle(new Item.Properties(), true, 0.1f));
     public static final RegistryObject<EnergieSword> ENERGIE_SWORD = ITEMS.register("energie_sword",
             () -> new EnergieSword(new Item.Properties()));
 
