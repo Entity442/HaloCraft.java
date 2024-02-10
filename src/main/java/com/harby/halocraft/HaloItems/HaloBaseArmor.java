@@ -5,12 +5,12 @@ import com.google.common.collect.Multimap;
 import com.harby.halocraft.HaloItems.interfaces.IHaloArmorItem;
 import com.harby.halocraft.HaloItems.interfaces.IHaloMaterials;
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -35,7 +35,7 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
     private final EquipmentSlot slot;
     private final HaloBaseArmor.Type type;
-    private boolean isShielded;
+    private final boolean isShielded;
     private int energyTicks;
     private final int defense;
     private final double health;
@@ -45,8 +45,8 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
     private final double knockRes;
     private final double toughness;
 
-    public HaloBaseArmor(IHaloMaterials materials, HaloBaseArmor.Type type,boolean shield, Properties properties) {
-        super(properties);
+    public HaloBaseArmor(IHaloMaterials materials, HaloBaseArmor.Type type,boolean shield) {
+        super(new Properties().stacksTo(1).durability(materials.getDurability(type)));
         this.slot = type.slot;
         this.type = type;
         this.isShielded = shield;
@@ -98,7 +98,7 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
         private final EquipmentSlot slot;
         private final String name;
 
-        private Type(EquipmentSlot pSlot, String pName) {
+        Type(EquipmentSlot pSlot, String pName) {
             this.slot = pSlot;
             this.name = pName;
         }
@@ -165,5 +165,11 @@ public abstract class HaloBaseArmor extends ItemBase implements Equipable, IHalo
         if (this.getShieldTicks() > 0){
             this.energyTicks--;
         }
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        pStack.hurt(1,pAttacker.getRandom(),null);
+        return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 }

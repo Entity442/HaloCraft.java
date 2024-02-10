@@ -25,14 +25,26 @@ public class HaloItems {
         ITEMS.register(eventBus);
     }
 
-    /*public static final RegistryObject<TestArmor> TEST = ITEMS.register("test",
-            () -> new TestArmor(HaloBaseArmor.Type.HELMET, new Item.Properties().durability(100)));
-    public static final RegistryObject<TestArmor> TEST2 = ITEMS.register("test2",
-            () -> new TestArmor(HaloBaseArmor.Type.CHESTPLATE, new Item.Properties().durability(100)));
-    public static final RegistryObject<TestArmor> TEST3 = ITEMS.register("test3",
-            () -> new TestArmor(HaloBaseArmor.Type.LEGGINGS, new Item.Properties().durability(100)));
-    public static final RegistryObject<TestArmor> TEST4 = ITEMS.register("test4",
-            () -> new TestArmor(HaloBaseArmor.Type.BOOTS, new Item.Properties().durability(100)));*/
+    public  static final RegistryObject<TestArmor> TEST = ITEMS.register("test",
+            () -> new TestArmor(HaloBaseArmor.Type.HELMET));
+    public  static final RegistryObject<TestArmor> TEST2 = ITEMS.register("test2",
+            () -> new TestArmor(HaloBaseArmor.Type.CHESTPLATE));
+    public  static final RegistryObject<TestArmor> TEST3 = ITEMS.register("test3",
+            () -> new TestArmor(HaloBaseArmor.Type.LEGGINGS));
+    public  static final RegistryObject<TestArmor> TEST4 = ITEMS.register("test4",
+            () -> new TestArmor(HaloBaseArmor.Type.BOOTS));
+
+    public  static final RegistryObject<BulletItem> BULLET = ITEMS.register("bullet",
+            () -> new BulletItem( new Item.Properties()));
+    public  static final RegistryObject<BulletItem> EXPLOSIVE_BULLET = ITEMS.register("explosive_bullet",
+            () -> new BulletItem( new Item.Properties()));
+    public  static final RegistryObject<BulletItem> FIRE_BULLET = ITEMS.register("fire_bullet",
+            () -> new BulletItem( new Item.Properties()));
+    public  static final RegistryObject<BulletItem> FROZEN_BULLET = ITEMS.register("frozen_bullet",
+            () -> new BulletItem( new Item.Properties()));
+    public  static final RegistryObject<BulletItem> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
+            () -> new BulletItem( new Item.Properties()));
+
 
     public static final RegistryObject<Gun> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",
             () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 60, 2, 60, 7.0f, 15));
@@ -40,6 +52,7 @@ public class HaloItems {
             () -> new SniperRiffle(new Item.Properties(), false, 0.1f));
     public static final RegistryObject<SniperRiffle> GOLDEN_SNIPER_RIFFLE = ITEMS.register("golden_sniper_riffle",
             () -> new SniperRiffle(new Item.Properties(), true, 0.1f));
+
     public static final RegistryObject<EnergieSword> ENERGIE_SWORD = ITEMS.register("energie_sword",
             () -> new EnergieSword(new Item.Properties()));
 
@@ -55,8 +68,4 @@ public class HaloItems {
     public static final RegistryObject<AmmoItem> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
             () -> new AmmoItem(new Item.Properties(),AmmoList.PENETRATING_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get()));
 
-
-    private static RegistryObject<Item> block(RegistryObject<Block> block) {
-        return ITEMS.register(block.getId().getPath(), () -> new BlockItemBase(block.get(), new Item.Properties()));
-    }
 }
