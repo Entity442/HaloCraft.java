@@ -52,8 +52,4 @@ public class HaloItems {
     public static final RegistryObject<EnergieSword> ENERGIE_SWORD = ITEMS.register("energie_sword",
             () -> new EnergieSword( new Item.Properties()));
 
-
-    private static RegistryObject<Item> block(RegistryObject<Block> block) {
-        return ITEMS.register(block.getId().getPath(), () -> new BlockItemBase(block.get(), new Item.Properties()));
-    }
 }

@@ -42,6 +42,7 @@ public class HaloCraft
         modEventBus.addListener(this::commonSetup);
         HaloItems.register(modEventBus);
         HaloBlocks.register(modEventBus);
+        HaloBlockEntities.register(modEventBus);
         HaloCreativeTab.register(modEventBus);
         HaloEntities.register(modEventBus);
         HaloParticles.register(modEventBus);

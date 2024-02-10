@@ -1,11 +1,14 @@
 package com.harby.halocraft.Client;
 
 import com.harby.halocraft.Client.ArmorLayers.HaloArmorLayer;
+import com.harby.halocraft.Client.BlockModels.forrunner_door_model;
+import com.harby.halocraft.Client.BlockRenderers.CustomDoorRenderer;
 import com.harby.halocraft.Client.Models.*;
 import com.harby.halocraft.Client.Renderers.*;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.Message.HandleReloadingModels;
 import com.harby.halocraft.Particles.PlasmaParticleTrail;
+import com.harby.halocraft.core.HaloBlockEntities;
 import com.harby.halocraft.core.HaloEntities;
 import com.harby.halocraft.core.HaloParticles;
 import net.minecraft.client.Minecraft;
@@ -34,6 +37,10 @@ public class ClientEvents {
         event.registerLayerDefinition(PlasmaRing.LAYER_LOCATION, PlasmaRing::createBodyLayer);
         event.registerLayerDefinition(PlasmaRingH.LAYER_LOCATION, PlasmaRingH::createBodyLayer);
         event.registerLayerDefinition(unsc_helmetModel.LAYER_LOCATION, unsc_helmetModel::createBodyLayer);
+
+
+
+        event.registerLayerDefinition(forrunner_door_model.LAYER_LOCATION, forrunner_door_model::createBodyLayer);
     }
 
 
@@ -48,6 +55,9 @@ public class ClientEvents {
         event.registerEntityRenderer(HaloEntities.BEAM.get(), BeamRenderer::new);
 
         event.registerEntityRenderer(HaloEntities.GRUNT.get(), GruntRenderer::new);
+
+
+        event.registerBlockEntityRenderer(HaloBlockEntities.CUSTOM_DOOR.get(), new CustomDoorRenderer());
     }
 
     @SubscribeEvent

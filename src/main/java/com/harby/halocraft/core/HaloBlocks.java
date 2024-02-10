@@ -1,6 +1,7 @@
 package com.harby.halocraft.core;
 
 import com.harby.halocraft.HaloBlocks.BeamEmitter;
+import com.harby.halocraft.HaloBlocks.CustomDoor;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloItems.BlockItemBase;
 import net.minecraft.world.item.BlockItem;
@@ -55,5 +56,7 @@ public class HaloBlocks {
     public static final RegistryObject<Block> ASTEROID = registerBlock("asteroid", () -> new Block(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
 
     public static final RegistryObject<Block> BEAM_EMITTER = registerBlock("beam_emitter", BeamEmitter::new);
+
+    public static final RegistryObject<Block> CUSTOM_DOOR = registerBlock("custom_door", () -> new CustomDoor(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
 
 }
