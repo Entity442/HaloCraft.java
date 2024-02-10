@@ -34,4 +34,6 @@ public abstract class BaseAmmo {
      */
     public abstract AmmoList getBulletType();
 
+    public abstract void onShoot(BaseProjectileEntity bullet);
+
 }

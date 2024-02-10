@@ -4,6 +4,8 @@ import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
 import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class BaseBullet extends BaseAmmo {
@@ -32,5 +34,10 @@ public abstract class BaseBullet extends BaseAmmo {
             bullet.level().addAlwaysVisibleParticle(HaloParticles.PLASMA_TRAIL.get(), vec.x, vec.y, vec.z, 1, 0.3d, 1);
             pTicks += 0.1d;
         }
+    }
+
+    @Override
+    public void onShoot(BaseProjectileEntity bullet) {
+        bullet.level().playSound(bullet,bullet.getOnPos(), SoundEvents.FIREWORK_ROCKET_BLAST_FAR, SoundSource.AMBIENT, 3F, 1F);
     }
 }

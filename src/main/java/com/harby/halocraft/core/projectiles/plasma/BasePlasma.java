@@ -72,4 +72,9 @@ public abstract class BasePlasma extends BaseAmmo {
         y -= 0.1 * tickCount * tickCount;
         return new Vec3(x, y, z);
     }
+
+    @Override
+    public void onShoot(BaseProjectileEntity bullet) {
+
+    }
 }
