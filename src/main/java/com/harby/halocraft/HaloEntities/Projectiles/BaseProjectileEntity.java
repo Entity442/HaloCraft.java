@@ -1,7 +1,6 @@
 package com.harby.halocraft.HaloEntities.Projectiles;
 
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
-import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.HaloTags;
 import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
@@ -48,9 +47,6 @@ public abstract class BaseProjectileEntity extends Projectile {
         this.setShoutedPos(livingEntity.getEyePosition());
         this.setShoutedDirection(-livingEntity.getYRot(), -livingEntity.getXRot(), velocity);
         this.reapplyPosition();
-        this.level().addParticle(HaloParticles.PLASMA_TRAIL.get(), this.getX()+1, this.getY(), this.getZ(), 3, 1, 1);
-        //this.mo
-        //this.setDeltaMovement(getProjectile().get().movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
     }
 
     public BaseProjectileEntity(Level level, EntityType<? extends BaseProjectileEntity> entityType) {
@@ -121,7 +117,7 @@ public abstract class BaseProjectileEntity extends Projectile {
     }
 
     @Override
-    protected boolean canHitEntity(Entity entity) {
+    protected boolean canHitEntity(@NotNull Entity entity) {
         return entity != getOwner() || !(entity instanceof BaseProjectileEntity);
     }
 
@@ -131,7 +127,7 @@ public abstract class BaseProjectileEntity extends Projectile {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (this.level().isClientSide()) return;
         if (entityHitResult.getEntity() instanceof BasicVehicleEntity basicVehicle) {
             int damageMultipier = 1;
@@ -152,7 +148,7 @@ public abstract class BaseProjectileEntity extends Projectile {
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult result) {
+    protected void onHitBlock(@NotNull BlockHitResult result) {
         super.onHitBlock(result);
         if (this.level().isClientSide()) return;
         boolean discard = false;
@@ -167,9 +163,7 @@ public abstract class BaseProjectileEntity extends Projectile {
             this.noPhysics = true;
             discard = true;
         }
-        if (discard) {
-            //this.discard();
-        } else {
+        if (!discard) {
             BaseAmmo projectile = this.getProjectile().get();
             projectile.onHitBlock(this, result);
             this.remove(RemovalReason.KILLED);
@@ -197,36 +191,68 @@ public abstract class BaseProjectileEntity extends Projectile {
         Vec3 posBefore = this.getPosition(0);
         Vec3 posAfter = (projectile.movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
 
-        HitResult hitresult = this.level().clip(new ClipContext(posBefore, posAfter, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
-        if (hitresult.getType() != HitResult.Type.MISS) {
-            posAfter = hitresult.getLocation();
+        HitResult hitresult = this.entityHit(posBefore, posAfter);
+        if (hitresult == null || hitresult.getType() == HitResult.Type.MISS) {
+            hitresult = blockHit(posBefore, posAfter);
         }
-        int entityCount = 0;
-        while (!this.isRemoved() && hitresult != null && hitresult.getType() != HitResult.Type.MISS && entityCount == 0) {
-            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(this.level(), this, posBefore, posAfter, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
-            if (entityhitresult != null) {
-                hitresult = entityhitresult;
-            }
-            if (hitresult.getType() == HitResult.Type.ENTITY) {
-                Entity entity = ((EntityHitResult) hitresult).getEntity();
-                Entity owner = this.getOwner();
-                if (entity instanceof Player && owner instanceof Player && !((Player) owner).canHarmPlayer((Player) entity)) {
-                    hitresult = null;
-                } else {
-                    entityCount++;
-                    posAfter = hitresult.getLocation();
-                }
-            }
-            if (hitresult != null && hitresult.getType() != HitResult.Type.MISS) {
-                if (net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult))
-                    break;
-                posAfter = hitresult.getLocation();
-            }
-            //hitresult = null;
+        if (hitresult == null || hitresult.getType() != HitResult.Type.MISS) {
+           posAfter = hitresult.getLocation();
         }
         this.setPos(posAfter);
+        this.reapplyPosition();
         if (hitresult != null && hitresult.getType() != HitResult.Type.MISS) {
             this.onHit(hitresult);
         }
+    }
+
+    private HitResult blockHit(Vec3 posBefore, Vec3 posAfter) {
+        return this.level().clip(new ClipContext(posBefore, posAfter, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+    }
+
+    private HitResult entityHit(Vec3 posBefore, Vec3 posAfter) {
+        boolean isHit = false;
+        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(this.level(), this, posBefore, posAfter, this.getBoundingBox().expandTowards(posAfter.add(posBefore.reverse())).inflate(1.0D), this::canHitEntity);
+        if (entityhitresult == null) {
+            return new HitResult(posAfter) {
+                @Override
+                public @NotNull Type getType() {
+                    return Type.MISS;
+                }
+            };
+        }
+        isHit = entityhitresult.getType() == HitResult.Type.ENTITY;
+        if (!isHit) {
+            return new HitResult(posAfter) {
+                @Override
+                public @NotNull Type getType() {
+                    return Type.MISS;
+                }
+            };
+        }
+        if (entityhitresult instanceof EntityHitResult) {
+            Entity entity = entityhitresult.getEntity();
+            Entity owner = this.getOwner();
+            if (entity instanceof BaseProjectileEntity) {
+                return new HitResult(posAfter) {
+                    @Override
+                    public @NotNull Type getType() {
+                        return Type.MISS;
+                    }
+                };
+            }
+            if (entity instanceof Player && owner instanceof Player && !((Player) owner).canHarmPlayer((Player) entity)) {
+                entityhitresult = null;
+                isHit = false;
+            }
+        }
+        if (entityhitresult != null && isHit /*&& net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, entityhitresult)*/) {
+            return entityhitresult;
+        }
+        return new HitResult(posAfter) {
+            @Override
+            public @NotNull Type getType() {
+                return Type.MISS;
+            }
+        };
     }
 }
