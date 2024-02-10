@@ -1,6 +1,5 @@
 package com.harby.halocraft.core.projectiles.bullet;
 
-import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
 import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
@@ -26,7 +25,6 @@ public abstract class BaseBullet extends BaseAmmo {
 
     @Override
     public void onMove(BaseProjectileEntity bullet) {
-        HaloCraft.LOGGER.info(bullet.toString());
         if (bullet.tickCount == 0) return;
         double pTicks = 0d;
         while (pTicks < 1d) {
