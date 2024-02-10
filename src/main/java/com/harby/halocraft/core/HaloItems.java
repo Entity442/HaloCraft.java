@@ -5,7 +5,6 @@ import com.harby.halocraft.HaloItems.*;
 import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -33,18 +32,6 @@ public class HaloItems {
             () -> new TestArmor(HaloBaseArmor.Type.LEGGINGS));
     public  static final RegistryObject<TestArmor> TEST4 = ITEMS.register("test4",
             () -> new TestArmor(HaloBaseArmor.Type.BOOTS));
-
-    public  static final RegistryObject<BulletItem> BULLET = ITEMS.register("bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> EXPLOSIVE_BULLET = ITEMS.register("explosive_bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> FIRE_BULLET = ITEMS.register("fire_bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> FROZEN_BULLET = ITEMS.register("frozen_bullet",
-            () -> new BulletItem( new Item.Properties()));
-    public  static final RegistryObject<BulletItem> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
-            () -> new BulletItem( new Item.Properties()));
-
 
     public static final RegistryObject<Gun> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",
             () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 60, 2, 60, 7.0f, 15));
