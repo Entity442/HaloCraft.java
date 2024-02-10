@@ -7,6 +7,7 @@ import com.harby.halocraft.core.HaloItems;
 import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,12 +90,15 @@ public class Gun extends Item {
     }
 
     public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
+        if (this.isShooting()) {
+            return;
+        }
         if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE && this.getAmountAmmoStored(stack) > 0 && !this.isShooting()) {
             AmmoList ammo = this.getAmmoType(stack);
             BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo, this.getSpeed());
             bulletEntity.setDamage(this.getDamage());
             level.addFreshEntity(bulletEntity);
-            HaloCraft.LOGGER.info("new: "+bulletEntity.toString());
+            //HaloCraft.LOGGER.info("new: "+bulletEntity.toString());
             this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
             if (this.getAmountAmmoStored(stack) == 0) {
                 this.setAmmoType(stack, AmmoList.NONE);
@@ -165,8 +170,12 @@ public class Gun extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        components.add(Component.literal("Ammo: " + this.getAmountAmmoStored(itemStack) + "/" + getMaxAmmo()).withStyle(ChatFormatting.RED));
-        components.add(Component.literal("Ammo type: " + this.getAmmoType(itemStack).name()).withStyle(ChatFormatting.YELLOW));
+        /*components.add(Component.literal("Ammo: " + this.getAmountAmmoStored(itemStack) + "/" + getMaxAmmo()).withStyle(ChatFormatting.RED));
+        components.add(Component.literal("Ammo type: " + this.getAmmoType(itemStack).name()).withStyle(ChatFormatting.YELLOW));*/
+        components.add(Component.translatable("tooltip.halocraft.ammo", this.getAmountAmmoStored(itemStack), this.getMaxAmmo()).withStyle(ChatFormatting.GRAY));
+        if (this.getAmmoType(itemStack) != AmmoList.NONE) {
+            components.add(Component.translatable("ammo_list.halocraft." + this.getAmmoType(itemStack).name().toLowerCase()).withStyle(ChatFormatting.YELLOW));
+        }
         super.appendHoverText(itemStack, level, components, flag);
     }
 
@@ -237,5 +246,20 @@ public class Gun extends Item {
 
     public float getSpeed() {
         return speed;
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        return true;
+    }
+
+    @Override
+    public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
+        return false;
+    }
+
+    @Override
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+        return true;
     }
 }
