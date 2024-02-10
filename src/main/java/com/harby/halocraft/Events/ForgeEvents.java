@@ -13,10 +13,9 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void ComputeFovModifierEvent(ComputeFovModifierEvent event) {
         Player player = event.getPlayer();
-        System.out.println(player.getName());
         ItemStack stack = player.getItemInHand(player.getUsedItemHand());
-        if (stack.getItem() instanceof SniperRiffle gun && gun .isScopeing()) {
-            event.setNewFovModifier(0.1f);
+        if (stack.getItem() instanceof SniperRiffle gun && gun.isScoping(stack)) {
+            event.setNewFovModifier(gun.getFovModifier());
         } else {
             event.setNewFovModifier(1.0f);
         }

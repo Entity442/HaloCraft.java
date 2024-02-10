@@ -1,19 +1,24 @@
 package com.harby.halocraft.HaloItems;
 
-import com.harby.halocraft.HaloEntities.Projectiles.BaseBulletEntity;
+import com.harby.halocraft.core.projectiles.AmmoTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class SniperRiffle extends Gun{
-    public static final int USE_DURATION = 1200;
-    public static final float ZOOM_FOV_MODIFIER = 0.1F;
-    private final boolean golden;
-    public SniperRiffle(Properties properties,boolean gold) {
-        super(properties);
-        this.golden = gold;
+public class SniperRiffle extends Gun {
+    //this class work as a test for scope gun
+    public final float fovOnScope;
+
+    public SniperRiffle(Properties properties, boolean golden, float fovOnScope) {
+        super(properties, true, AmmoTypes.BULLET, 4, 20, 200, golden ? 25.0f : 35.0f, 25);
+        this.fovOnScope = fovOnScope;
     }
 
     public @NotNull UseAnim getUseAnimation(ItemStack pStack) {
@@ -23,17 +28,6 @@ public class SniperRiffle extends Gun{
     @Override
     public int getShootingDelay() {
         return 20;
-    }
-
-    @Override
-    public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
-        if (!level.isClientSide) {
-            BaseBulletEntity bulletEntity = new BaseBulletEntity(level,livingEntity);
-            bulletEntity.setProjectileType(getAmmoType(stack));
-            bulletEntity.setDamage(golden ? 35f : 20f);
-            bulletEntity.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, 6.0F, 1.0F);
-            level.addFreshEntity(bulletEntity);
-        }
     }
 
     @Override
@@ -51,7 +45,38 @@ public class SniperRiffle extends Gun{
         return true;
     }
 
-    public boolean isScopeing(){
-        return true;
+    public boolean isScoping(ItemStack gun) {
+        CompoundTag compoundtag = gun.getTag();
+        if (compoundtag == null || !compoundtag.contains("scoping")) {
+            return false;
+        }
+        return compoundtag.getBoolean("scoping");
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int va) {
+        super.onUseTick(level, livingEntity, stack, va);
+        stack.getOrCreateTag().putBoolean("scoping", true);
+    }
+
+    @Override
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+        super.onStopUsing(stack, entity, count);
+        stack.getOrCreateTag().putBoolean("scoping", false);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        super.use(pLevel, pPlayer, pUsedHand);
+        if (!this.isTwoHandAvailable(pPlayer)) {
+            return InteractionResultHolder.fail(pPlayer.getItemInHand(pUsedHand));
+        } else {
+            ItemUtils.startUsingInstantly(pLevel, pPlayer, pPlayer.getUsedItemHand());
+            return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
+        }
+    }
+
+    public float getFovModifier() {
+        return this.fovOnScope;
     }
 }
