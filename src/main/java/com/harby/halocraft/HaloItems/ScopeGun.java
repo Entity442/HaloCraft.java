@@ -12,11 +12,11 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class SniperRiffle extends Gun {
+public class ScopeGun extends Gun {
     //this class work as a test for scope gun
     public final float fovOnScope;
 
-    public SniperRiffle(Properties properties, boolean golden, float fovOnScope) {
+    public ScopeGun(Properties properties, boolean golden, float fovOnScope) {
         super(properties, true, AmmoTypes.BULLET, 4, 20, 200, golden ? 25.0f : 35.0f, 25);
         this.fovOnScope = fovOnScope;
     }
@@ -72,6 +72,7 @@ public class SniperRiffle extends Gun {
             return InteractionResultHolder.fail(pPlayer.getItemInHand(pUsedHand));
         } else {
             ItemUtils.startUsingInstantly(pLevel, pPlayer, pPlayer.getUsedItemHand());
+            //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new ScopeScreen()));
             return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
         }
     }
