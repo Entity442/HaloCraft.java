@@ -12,6 +12,7 @@ public class ConfigDataGenerator {
 
     static {
         excludesBlocksGenerate.add(HaloBlocks.BEAM_EMITTER.get());
+        excludesBlocksGenerate.add(HaloBlocks.CUSTOM_DOOR.get());
     }
 
     static final ArrayList<Item> excludesItemsGenerate = new ArrayList<>();
@@ -21,6 +22,10 @@ public class ConfigDataGenerator {
         excludesItemsGenerate.add(HaloItems.SNIPER_RIFFLE.get());
         excludesItemsGenerate.add(HaloItems.GOLDEN_SNIPER_RIFFLE.get());
         excludesItemsGenerate.add(HaloItems.ENERGIE_SWORD.get());
+        excludesItemsGenerate.add(HaloItems.TEST.get());
+        excludesItemsGenerate.add(HaloItems.TEST2.get());
+        excludesItemsGenerate.add(HaloItems.TEST3.get());
+        excludesItemsGenerate.add(HaloItems.TEST4.get());
     }
 
     static final ArrayList<String> langIndex = new ArrayList<>();
