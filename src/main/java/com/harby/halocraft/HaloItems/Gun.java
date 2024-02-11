@@ -49,19 +49,6 @@ public class Gun extends Item {
         HaloItems.GUNS_ITEMS.add(this);
     }
 
-    /*@Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player livingEntity, InteractionHand hand) {
-        ItemStack itemstack = livingEntity.getItemInHand(hand);
-        if (this.twoHands() && !isTwoHandAvailable(livingEntity)) {
-            return InteractionResultHolder.fail(itemstack);
-        }
-        if (this.isShooting()) {
-            return InteractionResultHolder.fail(itemstack);
-        }
-        livingEntity.awardStat(Stats.ITEM_USED.get(this));
-        livingEntity.startUsingItem(hand);
-        return InteractionResultHolder.consume(itemstack);
-    }*/
 
 
     @Override
@@ -98,7 +85,6 @@ public class Gun extends Item {
             BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo, this.getSpeed());
             bulletEntity.setDamage(this.getDamage());
             level.addFreshEntity(bulletEntity);
-            //HaloCraft.LOGGER.info("new: "+bulletEntity.toString());
             this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
             if (this.getAmountAmmoStored(stack) == 0) {
                 this.setAmmoType(stack, AmmoList.NONE);
@@ -150,29 +136,10 @@ public class Gun extends Item {
         compoundtag.putString("type", ammo.name());
     }
 
-    @Override
-    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int va) {
-        /*if (va % this.getShootingDelay() != 0 && !level.isClientSide()) {
-            return;
-        }
-        if (this.getAmountAmmoStored(stack) > 0 && this.getAmmoType(stack) != AmmoList.NONE) {
-            this.isShooting = true;
-            this.shotProjectile(level, livingEntity, stack);
-            this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
-            //livingEntity.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 0.5F, 1.0F);
-        } else {
-            if (livingEntity instanceof Player player) {
-                player.displayClientMessage(Component.literal("Out of Ammo"), true);
-            }
-        }
-        super.onUseTick(level, livingEntity, stack, va);*/
-    }
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        /*components.add(Component.literal("Ammo: " + this.getAmountAmmoStored(itemStack) + "/" + getMaxAmmo()).withStyle(ChatFormatting.RED));
-        components.add(Component.literal("Ammo type: " + this.getAmmoType(itemStack).name()).withStyle(ChatFormatting.YELLOW));*/
-        components.add(Component.translatable("tooltip.halocraft.ammo", this.getAmountAmmoStored(itemStack), this.getMaxAmmo()).withStyle(ChatFormatting.GRAY));
+         components.add(Component.translatable("tooltip.halocraft.ammo", this.getAmountAmmoStored(itemStack), this.getMaxAmmo()).withStyle(ChatFormatting.GRAY));
         if (this.getAmmoType(itemStack) != AmmoList.NONE) {
             components.add(Component.translatable("ammo_list.halocraft." + this.getAmmoType(itemStack).name().toLowerCase()).withStyle(ChatFormatting.YELLOW));
         }
