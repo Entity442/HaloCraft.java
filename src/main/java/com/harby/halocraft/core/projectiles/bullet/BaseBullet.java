@@ -38,6 +38,6 @@ public abstract class BaseBullet extends BaseAmmo {
 
     @Override
     public void onShoot(BaseProjectileEntity bullet) {
-        bullet.level().playSound(bullet,bullet.getOnPos(), SoundEvents.FIREWORK_ROCKET_BLAST_FAR, SoundSource.AMBIENT, 3F, 1F);
+        bullet.level().playSound(bullet, bullet.getOnPos(), SoundEvents.FIREWORK_ROCKET_BLAST_FAR, SoundSource.AMBIENT, 4F, 2F);
     }
 }

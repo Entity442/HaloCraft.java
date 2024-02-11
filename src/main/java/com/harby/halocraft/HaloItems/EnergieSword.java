@@ -58,7 +58,7 @@ public class EnergieSword extends SwordItem {
             entity.hurtMarked = true;
             entity.knockback(2.5F, -entity.getLookAngle().x, -entity.getLookAngle().z);
             if (!((Player) entity).isCreative()) {
-                stack.hurtAndBreak(1, entity, (player) -> player.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                stack.hurtAndBreak(100, entity, (player) -> player.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
         }
 
@@ -79,7 +79,7 @@ public class EnergieSword extends SwordItem {
             if (!isOff(pStack) && !player.isCreative()) {
                 if (pStack.getDamageValue() >= pStack.getMaxDamage() - 1)
                     pStack.hurtAndBreak(1, player, (player1) -> player1.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                pStack.setDamageValue(pStack.getDamageValue() + 1);
+                pStack.setDamageValue(pStack.getDamageValue() + 1);//make animation which is bad, it's spaming
             }
         }
     }

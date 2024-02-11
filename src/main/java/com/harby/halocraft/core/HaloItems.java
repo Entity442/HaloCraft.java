@@ -41,7 +41,7 @@ public class HaloItems {
             () -> new SniperRiffle(new Item.Properties(), true, 0.1f));
 
     public static final RegistryObject<EnergieSword> ENERGIE_SWORD = ITEMS.register("energie_sword",
-            () -> new EnergieSword(new Item.Properties()));
+            () -> new EnergieSword(new Item.Properties().durability(10000)));
 
 
     public static final RegistryObject<AmmoItem> BASIC_BULLET = ITEMS.register("basic_bullet",
@@ -53,6 +53,6 @@ public class HaloItems {
     public static final RegistryObject<AmmoItem> FROZEN_BULLET = ITEMS.register("frozen_bullet",
             () -> new AmmoItem(new Item.Properties(),AmmoList.FROZEN_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get()));
     public static final RegistryObject<AmmoItem> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
-            () -> new AmmoItem(new Item.Properties(),AmmoList.PENETRATING_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get()));
+            () -> new AmmoItem(new Item.Properties(),AmmoList.PENETRATING_BULLET, SNIPER_RIFFLE.get()));
 
 }
