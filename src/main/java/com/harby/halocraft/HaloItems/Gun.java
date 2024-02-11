@@ -92,6 +92,7 @@ public class Gun extends Item {
                     player.displayClientMessage(Component.translatable("message.halocraft.out_of_ammo"), true);
                 }
             }
+            ammo.get().onShoot(bulletEntity);
             this.shootingTicks = this.getShootingDelay();
         }
     }
