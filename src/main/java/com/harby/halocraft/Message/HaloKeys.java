@@ -1,8 +1,6 @@
 package com.harby.halocraft.Message;
 
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
-import com.harby.halocraft.core.HaloKeybinds;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -51,23 +49,6 @@ public class HaloKeys {
             }
         });
         context.get().setPacketHandled(true);
-    }
-
-
-    public static boolean getKey(int keyType){
-        switch (keyType) {
-            case 0:
-                return Minecraft.getInstance().options.keyJump.isDown();
-            case 1:
-                return Minecraft.getInstance().options.keySprint.isDown();
-            case 2:
-                return HaloKeybinds.RELOAD_KEY.isDown();
-            case 3:
-                return HaloKeybinds.SHOOTING_KEY.isDown();
-            default:
-                // handle default case here
-        }
-        return false;
     }
 }
 

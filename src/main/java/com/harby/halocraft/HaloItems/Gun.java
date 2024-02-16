@@ -3,6 +3,7 @@ package com.harby.halocraft.HaloItems;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
 import com.harby.halocraft.Message.HaloKeys;
+import com.harby.halocraft.Message.KeyBindList;
 import com.harby.halocraft.core.HaloItems;
 import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
@@ -172,7 +173,7 @@ public class Gun extends Item {
                     player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 1, false, false, true));
                     return;
                 }
-                if (HaloKeys.getKey(2) && isTwoHandAvailable(player)) {//reload key
+                if (KeyBindList.RELOAD.isDown() && isTwoHandAvailable(player)) {//reload key
                     if (this.getAmountAmmoStored(stack) < this.getMaxAmmo()) {
                         HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 2));
                         ItemStack ammoStack = lookForAmmo(player);
@@ -190,7 +191,7 @@ public class Gun extends Item {
                         }
                     }
                 }
-                if (HaloKeys.getKey(3) && isTwoHandAvailable(player)) {//shoot key
+                if (KeyBindList.SHOOT.isDown() && isTwoHandAvailable(player)) {//shoot key
                     if (this.getAmountAmmoStored(stack) == 0) {
                         player.displayClientMessage(Component.translatable("message.halocraft.out_of_ammo"), true);
                     } else {

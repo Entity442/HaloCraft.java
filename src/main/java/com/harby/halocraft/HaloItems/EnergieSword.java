@@ -2,6 +2,7 @@ package com.harby.halocraft.HaloItems;
 
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.Message.HaloKeys;
+import com.harby.halocraft.Message.KeyBindList;
 import com.harby.halocraft.core.HaloItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -68,7 +69,7 @@ public class EnergieSword extends SwordItem {
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (pEntity instanceof Player player) {
             if (player.getMainHandItem() == pStack) {
-                if (HaloKeys.getKey(2) && !player.isUsingItem() && !player.getCooldowns().isOnCooldown(this)) {
+                if (KeyBindList.RELOAD.isDown() && !player.isUsingItem() && !player.getCooldowns().isOnCooldown(this)) {
                     HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 2));
                     player.getCooldowns().addCooldown(this, 5);
                     setOff(pStack, !isOff(pStack));

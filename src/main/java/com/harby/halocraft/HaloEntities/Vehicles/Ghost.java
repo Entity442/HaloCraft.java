@@ -4,6 +4,7 @@ import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
 import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
 import com.harby.halocraft.Message.HaloKeys;
+import com.harby.halocraft.Message.KeyBindList;
 import com.harby.halocraft.core.HaloConfig;
 import com.harby.halocraft.core.HaloEntities;
 import com.harby.halocraft.core.projectiles.AmmoList;
@@ -50,7 +51,7 @@ public class Ghost extends BasicVehicleEntity {
         super.tick();
         Player player = (Player) this.getFirstPassenger();
         if (player == null) return;
-        if (HaloKeys.getKey(3) && shooting_ticks < 2){
+        if (KeyBindList.SHOOT.isDown() && shooting_ticks < 2){
             shooting_ticks = 10;
             HaloCraft.sendMSGToServer(new HaloKeys(this.getId(), player.getId(), 3));
         }

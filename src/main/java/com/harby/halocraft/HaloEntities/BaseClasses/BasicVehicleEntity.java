@@ -3,6 +3,7 @@ package com.harby.halocraft.HaloEntities.BaseClasses;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.Vehicles.Ghost;
 import com.harby.halocraft.Message.HaloKeys;
+import com.harby.halocraft.Message.KeyBindList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -182,11 +183,11 @@ public class BasicVehicleEntity extends Entity {
         if (this.level().isClientSide) {
             Player player = (Player) this.getFirstPassenger();
             if (player != null && player.isPassengerOfSameVehicle(this)) {
-                if (HaloKeys.getKey(0) && controlUpTicks < 2) {
+                if (KeyBindList.UP.isDown() && controlUpTicks < 2) {
                     HaloCraft.sendMSGToServer(new HaloKeys(this.getId(), player.getId(), 0));
                     controlUpTicks = 10;
                 }
-                if (HaloKeys.getKey(1) && controlDownTicks < 2) {
+                if (KeyBindList.FORWARD.isDown() && controlDownTicks < 2) {
                     HaloCraft.sendMSGToServer(new HaloKeys(this.getId(), player.getId(), 1));
                     controlDownTicks = 10;
                 }
