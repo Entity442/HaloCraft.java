@@ -18,9 +18,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         for (RegistryObject<Block> blockRegistryObject : HaloBlocks.BLOCKS.getEntries()) {
-            if (ConfigDataGenerator.excludesBlocksGenerate.contains(blockRegistryObject.get())) {
-                continue;
-            }
+            if (ConfigDataGenerator.excludesBlocksGenerate.contains(blockRegistryObject.get())) continue;
+
             if (blockRegistryObject.get() instanceof RotatedPillarBlock rpBlock) {
                 rotatedPillarBlockWithItem(rpBlock);
             } else {
@@ -36,7 +35,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     private void rotatedPillarBlockWithItem(RotatedPillarBlock blockRegistryObject) {
         ResourceLocation texture = blockTexture(blockRegistryObject);
-        HaloCraft.LOGGER.info(name(blockRegistryObject));
         axisBlock(
                 blockRegistryObject,
                 models().cubeColumnHorizontal(name(blockRegistryObject), texture, texture),
