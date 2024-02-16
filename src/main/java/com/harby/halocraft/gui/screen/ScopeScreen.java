@@ -30,8 +30,9 @@ public class ScopeScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-        if (pButton != 2) return false;
-        //this.removed();
+        HaloCraft.LOGGER.info(pButton+"");
+        if (pButton != 1) return false;
+        this.removed();
         this.setFocused(false);
         return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
@@ -39,7 +40,12 @@ public class ScopeScreen extends Screen {
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
         HaloCraft.LOGGER.info(pDelta+"");
-        if (Math.abs(pDelta) < 1) return false;
+        if (Math.abs(pDelta) < 0.5) return false;
         return super.mouseScrolled(pMouseX, pMouseY, pDelta);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 }
