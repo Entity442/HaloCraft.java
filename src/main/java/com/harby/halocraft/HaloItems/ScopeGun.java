@@ -60,13 +60,13 @@ public class ScopeGun extends Gun {
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int va) {
         super.onUseTick(level, livingEntity, stack, va);
-        stack.getOrCreateTag().putBoolean("scoping", true);
+        this.setScoping(true, stack);
     }
 
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         super.onStopUsing(stack, entity, count);
-        stack.getOrCreateTag().putBoolean("scoping", false);
+        this.setScoping(false, stack);
     }
 
     @Override
@@ -76,10 +76,9 @@ public class ScopeGun extends Gun {
             return InteractionResultHolder.fail(pPlayer.getItemInHand(pUsedHand));
         } else {
             ItemUtils.startUsingInstantly(pLevel, pPlayer, pPlayer.getUsedItemHand());
-            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-            stack.getOrCreateTag().putBoolean("scoping", true);
+            //this.setScoping(true, pPlayer.getItemInHand(pUsedHand));
             if (pLevel.isClientSide) {
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new ScopeScreen()));
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new ScopeScreen(pPlayer.getItemInHand(pUsedHand))));
             }
             return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
         }
@@ -87,5 +86,9 @@ public class ScopeGun extends Gun {
 
     public float getFovModifier() {
         return this.fovOnScope;
+    }
+
+    public void setScoping(boolean scoping, ItemStack pStack) {
+        pStack.getOrCreateTag().putBoolean("scoping", scoping);
     }
 }
