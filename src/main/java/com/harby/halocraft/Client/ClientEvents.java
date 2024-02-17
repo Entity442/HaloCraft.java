@@ -10,11 +10,13 @@ import com.harby.halocraft.Message.HandleReloadingModels;
 import com.harby.halocraft.Particles.PlasmaParticleTrail;
 import com.harby.halocraft.core.HaloBlockEntities;
 import com.harby.halocraft.core.HaloEntities;
+import com.harby.halocraft.core.HaloOverlay;
 import com.harby.halocraft.core.HaloParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,6 +26,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientEvents {
 
     private ClientEvents() {
+    }
+    @SubscribeEvent
+    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("scope", HaloOverlay.HUD_SCOPE_GUN);
     }
 
     @SubscribeEvent
