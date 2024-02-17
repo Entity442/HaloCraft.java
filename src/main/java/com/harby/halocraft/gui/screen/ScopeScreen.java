@@ -2,6 +2,7 @@ package com.harby.halocraft.gui.screen;
 
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloItems.ScopeGun;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -11,10 +12,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class ScopeScreen extends Screen {
     public static final ResourceLocation SCOPE_TEXTURE = new ResourceLocation(HaloCraft.MODID, "textures/gui/scope.png");
+    private final ScopeGun gun;
+    private final ItemStack stack;
 
-    public ScopeScreen(ItemStack gun) {
+    public ScopeScreen(ItemStack stack,ScopeGun gun) {
         super(Component.translatable("gui.halocraft.scope"));
-        if (gun.getItem() instanceof ScopeGun sgun) sgun.setScoping(true, gun);
+        gun.setScoping(true,stack);
+        this.gun = gun;
+        this.stack = stack;
     }
 
     @Override
@@ -34,6 +39,10 @@ public class ScopeScreen extends Screen {
         if (pButton != 1) return false;
         this.removed();
         this.setFocused(false);
+        this.gun.setScoping(false,stack);
+        if (Minecraft.getInstance().screen == this){
+            Minecraft.getInstance().popGuiLayer();
+        }
         return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 

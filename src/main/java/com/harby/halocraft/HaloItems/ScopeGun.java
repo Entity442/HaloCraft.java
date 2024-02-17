@@ -78,7 +78,7 @@ public class ScopeGun extends Gun {
             ItemUtils.startUsingInstantly(pLevel, pPlayer, pPlayer.getUsedItemHand());
             //this.setScoping(true, pPlayer.getItemInHand(pUsedHand));
             if (pLevel.isClientSide) {
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new ScopeScreen(pPlayer.getItemInHand(pUsedHand))));
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new ScopeScreen(pPlayer.getItemInHand(pUsedHand),this)));
             }
             return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
         }
