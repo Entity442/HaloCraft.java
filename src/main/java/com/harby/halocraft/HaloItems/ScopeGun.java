@@ -1,5 +1,6 @@
 package com.harby.halocraft.HaloItems;
 
+import com.harby.halocraft.Events.GunEvents;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.gui.screen.ScopeScreen;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,8 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,11 +81,13 @@ public class ScopeGun extends Gun {
             ItemUtils.startUsingInstantly(pLevel, pPlayer, pPlayer.getUsedItemHand());
             //this.setScoping(true, pPlayer.getItemInHand(pUsedHand));
             if (pLevel.isClientSide) {
+                MinecraftForge.EVENT_BUS.post(new GunEvents.GunScopeEvent(pPlayer,this,pUsedHand));
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new ScopeScreen(pPlayer.getItemInHand(pUsedHand),this)));
             }
             return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
         }
     }
+
 
     public float getFovModifier() {
         return this.fovOnScope;

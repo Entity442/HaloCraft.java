@@ -1,5 +1,6 @@
 package com.harby.halocraft.HaloItems;
 
+import com.harby.halocraft.Events.GunEvents;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
 import com.harby.halocraft.Message.HaloKeys;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,6 +81,7 @@ public class Gun extends Item {
 
     public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
         if (this.isShooting()) {
+            MinecraftForge.EVENT_BUS.post(new GunEvents.GunShootingEvent((Player) livingEntity,this,livingEntity.getUsedItemHand()));
             return;
         }
         if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE && this.getAmountAmmoStored(stack) > 0 && !this.isShooting()) {

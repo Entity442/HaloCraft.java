@@ -1,5 +1,6 @@
 package com.harby.halocraft.gui.screen;
 
+import com.harby.halocraft.Events.GunEvents;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloItems.ScopeGun;
 import net.minecraft.client.Minecraft;
@@ -7,7 +8,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
 public class ScopeScreen extends Screen {
@@ -41,6 +44,10 @@ public class ScopeScreen extends Screen {
         this.setFocused(false);
         this.gun.setScoping(false,stack);
         if (Minecraft.getInstance().screen == this){
+            Player pPlayer = Minecraft.getInstance().player;
+            if (pPlayer != null){
+                MinecraftForge.EVENT_BUS.post(new GunEvents.GunScopeEvent(pPlayer,gun,pPlayer.swingingArm));
+            }
             Minecraft.getInstance().popGuiLayer();
         }
         return super.mouseReleased(pMouseX, pMouseY, pButton);
