@@ -102,6 +102,7 @@ public class Gun extends Item {
     }
 
     public boolean isReloading(Player player) {
+        MinecraftForge.EVENT_BUS.post(new GunEvents.GunReloadingEvent(player,this,player.getUsedItemHand()));
         return player.getCooldowns().isOnCooldown(this);
     }
 

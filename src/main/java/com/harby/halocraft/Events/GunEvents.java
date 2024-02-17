@@ -52,6 +52,17 @@ public class GunEvents extends PlayerEvent {
             return this.getGun().isShooting();
         }
     }
+    public static class GunReloadingEvent extends GunEvents{
+        public GunReloadingEvent(Player player, Gun gun, InteractionHand hand) {
+            super(player, gun, hand);
+        }
+        public boolean isReloading(){
+            return this.getGun().isReloading(this.getEntity());
+        }
+        public void whileGunIsBeingReloaded(){
+
+        }
+    }
     public static class GunScopeEvent extends GunEvents{
         private final ScopeGun gun;
         public GunScopeEvent(Player player, Gun gun, InteractionHand hand) {
