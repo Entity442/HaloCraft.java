@@ -53,7 +53,6 @@ public class Gun extends Item {
     }
 
 
-
     @Override
     public int getUseDuration(@NotNull ItemStack pItemStack) {
         return 72000;
@@ -81,7 +80,7 @@ public class Gun extends Item {
 
     public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
         if (this.isShooting()) {
-            MinecraftForge.EVENT_BUS.post(new GunEvents.GunShootingEvent((Player) livingEntity,this,livingEntity.getUsedItemHand()));
+            MinecraftForge.EVENT_BUS.post(new GunEvents.GunShootingEvent((Player) livingEntity, this, livingEntity.getUsedItemHand()));
             return;
         }
         if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE && this.getAmountAmmoStored(stack) > 0 && !this.isShooting()) {
@@ -102,7 +101,7 @@ public class Gun extends Item {
     }
 
     public boolean isReloading(Player player) {
-        MinecraftForge.EVENT_BUS.post(new GunEvents.GunReloadingEvent(player,this,player.getUsedItemHand()));
+        MinecraftForge.EVENT_BUS.post(new GunEvents.GunReloadingEvent(player, this, player.getUsedItemHand()));
         return player.getCooldowns().isOnCooldown(this);
     }
 
@@ -115,7 +114,9 @@ public class Gun extends Item {
      */
     public int getAmountAmmoStored(ItemStack stack) {
         CompoundTag compoundtag = stack.getTag();
-        return compoundtag != null ? compoundtag.getInt("ammo") : 0;
+        if (compoundtag == null || !compoundtag.contains(HaloCraft.MODID)) return 0;
+        HaloCraft.LOGGER.info(compoundtag.toString());
+        return compoundtag.getCompound(HaloCraft.MODID).contains("ammo") ? compoundtag.getCompound(HaloCraft.MODID).getInt("ammo") : 0;
     }
 
     /**
@@ -123,7 +124,14 @@ public class Gun extends Item {
      */
     public void setAmountAmmoStored(ItemStack gunStack, int amount) {
         CompoundTag compoundtag = gunStack.getOrCreateTag();
-        compoundtag.putInt("ammo", amount);
+        if (compoundtag.contains(HaloCraft.MODID))
+            compoundtag.getCompound(HaloCraft.MODID).putInt("ammo", amount);
+        else {
+            CompoundTag modid = new CompoundTag();
+            modid.putInt("ammo", amount);
+            compoundtag.put(HaloCraft.MODID, modid);
+        }
+        HaloCraft.LOGGER.info(compoundtag.toString());
     }
 
     /**
@@ -131,7 +139,9 @@ public class Gun extends Item {
      */
     public AmmoList getAmmoType(ItemStack gunStack) {
         CompoundTag compoundtag = gunStack.getTag();
-        return compoundtag != null ? AmmoList.valueOf(compoundtag.getString("type")) : AmmoList.NONE;
+        if (compoundtag == null || !compoundtag.contains(HaloCraft.MODID)) return AmmoList.NONE;
+        HaloCraft.LOGGER.info(compoundtag.toString());
+        return compoundtag.getCompound(HaloCraft.MODID).contains("type") ? AmmoList.valueOf(compoundtag.getCompound(HaloCraft.MODID).getString("type")) : AmmoList.NONE;
     }
 
     /**
@@ -139,13 +149,19 @@ public class Gun extends Item {
      */
     public void setAmmoType(ItemStack stack, AmmoList ammo) {
         CompoundTag compoundtag = stack.getOrCreateTag();
-        compoundtag.putString("type", ammo.name());
+        if (compoundtag.contains(HaloCraft.MODID))
+            compoundtag.getCompound(HaloCraft.MODID).putString("type", ammo.name());
+        else {
+            CompoundTag modid = new CompoundTag();
+            modid.putString("type", ammo.name());
+            compoundtag.put(HaloCraft.MODID, modid);
+        }
     }
 
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-         components.add(Component.translatable("tooltip.halocraft.ammo", this.getAmountAmmoStored(itemStack), this.getMaxAmmo()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable("tooltip.halocraft.ammo", this.getAmountAmmoStored(itemStack), this.getMaxAmmo()).withStyle(ChatFormatting.GRAY));
         if (this.getAmmoType(itemStack) != AmmoList.NONE) {
             components.add(Component.translatable("ammo_list.halocraft." + this.getAmmoType(itemStack).name().toLowerCase()).withStyle(ChatFormatting.YELLOW));
         }
