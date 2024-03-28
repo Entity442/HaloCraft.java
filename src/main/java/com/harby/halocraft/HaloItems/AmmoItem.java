@@ -16,7 +16,7 @@ public class AmmoItem extends ItemBase {
     public AmmoItem(Properties properties, AmmoList ammo, Gun... guns) {
         super(properties);
         this.ammo = ammo;
-        System.out.println(guns.length);
+        //System.out.println(guns.length);
         for (Gun gun : guns) {
             if (gun.getAmmoType() != ammo.getType()) {
                 throw new IllegalArgumentException("The gun "+gun.getClass().getName()+" has not a valid ammo type ("+ammo.getType().name()+") !");
