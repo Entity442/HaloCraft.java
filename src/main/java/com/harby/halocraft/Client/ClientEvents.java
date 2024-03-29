@@ -29,7 +29,7 @@ public class ClientEvents {
     }
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerAboveAll("scope", HaloOverlay.HUD_SCOPE_GUN);
+        event.registerBelowAll("scope", HaloOverlay.HUD_SCOPE_GUN);
     }
 
     @SubscribeEvent
