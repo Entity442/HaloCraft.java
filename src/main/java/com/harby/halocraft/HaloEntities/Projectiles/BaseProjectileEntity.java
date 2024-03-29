@@ -1,10 +1,12 @@
 package com.harby.halocraft.HaloEntities.Projectiles;
 
+import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
 import com.harby.halocraft.core.HaloTags;
 import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -191,7 +193,7 @@ public abstract class BaseProjectileEntity extends Projectile {
         Vec3 posBefore = this.getPosition(0);
         Vec3 posAfter = (projectile.movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
 
-        HitResult hitresult = this.entityHit(posBefore, posAfter);
+        /*HitResult hitresult = this.entityHit(posBefore, posAfter);
         if (hitresult == null || hitresult.getType() == HitResult.Type.MISS) {
             hitresult = blockHit(posBefore, posAfter);
         }
@@ -202,6 +204,37 @@ public abstract class BaseProjectileEntity extends Projectile {
         this.reapplyPosition();
         if (hitresult != null && hitresult.getType() != HitResult.Type.MISS) {
             this.onHit(hitresult);
+        }*/
+        HitResult entityHit = this.entityHit(posBefore, posAfter);
+        HitResult blockHit = this.blockHit(posBefore, posAfter);
+        HaloCraft.LOGGER.info(entityHit.getType() + " " + blockHit.getType());
+        if (entityHit.getType() == HitResult.Type.MISS && blockHit.getType() == HitResult.Type.MISS) return;
+        if (entityHit.getType() == HitResult.Type.MISS && blockHit.getType() != HitResult.Type.MISS) {
+            BlockPos blockpos = BlockPos.containing(blockHit.getLocation());
+            this.setPos(blockHit.getLocation());
+            this.reapplyPosition();
+            this.onHit(blockHit);
+            //this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockpos, GameEvent.Context.of(this, this.level().getBlockState(blockpos)));
+        }
+        if (blockHit.getType() == HitResult.Type.MISS && entityHit.getType() != HitResult.Type.MISS) {
+            BlockPos blockpos = BlockPos.containing(entityHit.getLocation());
+            this.setPos(entityHit.getLocation());
+            this.reapplyPosition();
+            this.onHit(entityHit);
+            //this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockpos, GameEvent.Context.of(this, (BlockState) null));
+        }
+        if (entityHit.getLocation().distanceTo(posBefore) < blockHit.getLocation().distanceTo(posBefore)) {
+            BlockPos blockpos = BlockPos.containing(entityHit.getLocation());
+            this.setPos(entityHit.getLocation());
+            this.reapplyPosition();
+            this.onHit(entityHit);
+            //this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockpos, GameEvent.Context.of(this, (BlockState) null));
+        } else {
+            BlockPos blockpos = BlockPos.containing(blockHit.getLocation());
+            this.setPos(blockHit.getLocation());
+            this.reapplyPosition();
+            this.onHit(blockHit);
+            //this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockpos, GameEvent.Context.of(this, this.level().getBlockState(blockpos)));
         }
     }
 
