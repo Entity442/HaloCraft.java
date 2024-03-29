@@ -79,15 +79,13 @@ public class Gun extends Item {
     }
 
     public void shotProjectile(Level level, LivingEntity livingEntity, ItemStack stack) {
-        if (this.isShooting()) {
-            MinecraftForge.EVENT_BUS.post(new GunEvents.GunShootingEvent((Player) livingEntity, this, livingEntity.getUsedItemHand()));
-            return;
-        }
+        if (this.isShooting() || this.isReloading(livingEntity)) return;
         if (!level.isClientSide() && this.getAmmoType(stack) != AmmoList.NONE && this.getAmountAmmoStored(stack) > 0 && !this.isShooting()) {
             AmmoList ammo = this.getAmmoType(stack);
             BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo, this.getSpeed());
             bulletEntity.setDamage(this.getDamage());
             level.addFreshEntity(bulletEntity);
+            MinecraftForge.EVENT_BUS.post(new GunEvents.GunShootingEvent((Player) livingEntity, this, livingEntity.getUsedItemHand()));
             this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
             if (this.getAmountAmmoStored(stack) == 0) {
                 this.setAmmoType(stack, AmmoList.NONE);
@@ -100,9 +98,12 @@ public class Gun extends Item {
         }
     }
 
-    public boolean isReloading(Player player) {
-        MinecraftForge.EVENT_BUS.post(new GunEvents.GunReloadingEvent(player, this, player.getUsedItemHand()));
-        return player.getCooldowns().isOnCooldown(this);
+    public boolean isReloading(LivingEntity livingEntity) {
+        if (livingEntity instanceof Player player) {
+            MinecraftForge.EVENT_BUS.post(new GunEvents.GunReloadingEvent(player, this, livingEntity.getUsedItemHand()));
+            return player.getCooldowns().isOnCooldown(this);
+        }
+        return false;
     }
 
     public boolean isShooting() {
@@ -115,7 +116,6 @@ public class Gun extends Item {
     public int getAmountAmmoStored(ItemStack stack) {
         CompoundTag compoundtag = stack.getTag();
         if (compoundtag == null || !compoundtag.contains(HaloCraft.MODID)) return 0;
-        HaloCraft.LOGGER.info(compoundtag.toString());
         return compoundtag.getCompound(HaloCraft.MODID).contains("ammo") ? compoundtag.getCompound(HaloCraft.MODID).getInt("ammo") : 0;
     }
 
@@ -131,7 +131,6 @@ public class Gun extends Item {
             modid.putInt("ammo", amount);
             compoundtag.put(HaloCraft.MODID, modid);
         }
-        HaloCraft.LOGGER.info(compoundtag.toString());
     }
 
     /**
@@ -140,7 +139,6 @@ public class Gun extends Item {
     public AmmoList getAmmoType(ItemStack gunStack) {
         CompoundTag compoundtag = gunStack.getTag();
         if (compoundtag == null || !compoundtag.contains(HaloCraft.MODID)) return AmmoList.NONE;
-        HaloCraft.LOGGER.info(compoundtag.toString());
         return compoundtag.getCompound(HaloCraft.MODID).contains("type") ? AmmoList.valueOf(compoundtag.getCompound(HaloCraft.MODID).getString("type")) : AmmoList.NONE;
     }
 
