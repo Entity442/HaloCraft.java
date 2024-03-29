@@ -21,7 +21,7 @@ public abstract class BaseBullet extends BaseAmmo {
         y += shoutedDirection.y * tickCount;
         z += shoutedDirection.z * tickCount;
         //gravity: (here = -0.2 block / ticks)
-        y -= 0.1 * tickCount * tickCount;
+        y -= 0.2 * tickCount * tickCount;
         return new Vec3(x, y, z);
     }
 
