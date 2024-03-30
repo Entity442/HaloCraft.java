@@ -1,6 +1,5 @@
 package com.harby.halocraft.HaloEntities.Projectiles;
 
-import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
 import com.harby.halocraft.core.HaloTags;
 import com.harby.halocraft.core.projectiles.AmmoList;
@@ -207,7 +206,7 @@ public abstract class BaseProjectileEntity extends Projectile {
         }*/
         HitResult entityHit = this.entityHit(posBefore, posAfter);
         HitResult blockHit = this.blockHit(posBefore, posAfter);
-        HaloCraft.LOGGER.info(entityHit.getType() + " " + blockHit.getType());
+        //HaloCraft.LOGGER.info(entityHit.getType() + " " + blockHit.getType());
         if (entityHit.getType() == HitResult.Type.MISS && blockHit.getType() == HitResult.Type.MISS) return;
         if (entityHit.getType() == HitResult.Type.MISS && blockHit.getType() != HitResult.Type.MISS) {
             BlockPos blockpos = BlockPos.containing(blockHit.getLocation());
