@@ -192,7 +192,7 @@ public class Gun extends Item {
                     return;
                 }
                 if (KeyBindList.RELOAD.isDown() && isTwoHandAvailable(player)) {//reload key
-                    if (this.getAmountAmmoStored(stack) < this.getMaxAmmo()) {
+                    if (this.getAmountAmmoStored(stack) < this.getMaxAmmo() && !this.isShooting()) {
                         HaloCraft.sendMSGToServer(new HaloKeys(player.getId(), 2));
                         ItemStack ammoStack = lookForAmmo(player);
                         if (ammoStack.getItem() instanceof AmmoItem ammo && (ammo.getBullet() == this.getAmmoType(stack) || this.getAmmoType(stack) == AmmoList.NONE || this.getAmountAmmoStored(stack) == 0)) {
@@ -209,7 +209,7 @@ public class Gun extends Item {
                         }
                     }
                 }
-                if (KeyBindList.SHOOT.isDown() && isTwoHandAvailable(player)) {//shoot key
+                if (KeyBindList.SHOOT.isDown() && isTwoHandAvailable(player) && !this.isReloading(player)) {//shoot key
                     if (this.getAmountAmmoStored(stack) == 0) {
                         player.displayClientMessage(Component.translatable("message.halocraft.out_of_ammo"), true);
                     } else {
