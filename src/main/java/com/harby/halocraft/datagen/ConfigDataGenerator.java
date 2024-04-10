@@ -18,10 +18,8 @@ public class ConfigDataGenerator {
     static final ArrayList<Item> excludesItemsGenerate = new ArrayList<>();
 
     static {
-        excludesItemsGenerate.add(HaloItems.ASSAULT_RIFFLE.get());
-        excludesItemsGenerate.add(HaloItems.SNIPER_RIFFLE.get());
-        excludesItemsGenerate.add(HaloItems.GOLDEN_SNIPER_RIFFLE.get());
         excludesItemsGenerate.add(HaloItems.ENERGIE_SWORD.get());
+        excludesItemsGenerate.addAll(HaloItems.GUNS_ITEMS);
         excludesItemsGenerate.add(HaloItems.TEST.get());
         excludesItemsGenerate.add(HaloItems.TEST2.get());
         excludesItemsGenerate.add(HaloItems.TEST3.get());
