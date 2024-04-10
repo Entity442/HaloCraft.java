@@ -34,18 +34,20 @@ public class HaloItems {
             () -> new TestArmor(HaloBaseArmor.Type.BOOTS));
 
     public static final RegistryObject<Gun> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",
-            () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 60, 2, 60, 7.0f, 15));
+            () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 60, 4, 60, 7.0f, 15));
     public static final RegistryObject<ScopeGun> SNIPER_RIFFLE = ITEMS.register("sniper_riffle",
             () -> new ScopeGun(new Item.Properties(), false, 0.1f));
     public static final RegistryObject<ScopeGun> GOLDEN_SNIPER_RIFFLE = ITEMS.register("golden_sniper_riffle",
             () -> new ScopeGun(new Item.Properties(), true, 0.1f));
+    public static final RegistryObject<Gun> PISTOL = ITEMS.register("pistol",
+            () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 10, 8, 60, 6.0f, 10));
 
     public static final RegistryObject<EnergieSword> ENERGIE_SWORD = ITEMS.register("energie_sword",
             () -> new EnergieSword(new Item.Properties().durability(10000)));
 
 
     public static final RegistryObject<AmmoItem> BASIC_BULLET = ITEMS.register("basic_bullet",
-            () -> new AmmoItem(new Item.Properties(), AmmoList.NORMAL_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get()));
+            () -> new AmmoItem(new Item.Properties(), AmmoList.NORMAL_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get(), PISTOL.get()));
     public static final RegistryObject<AmmoItem> EXPLOSIVE_BULLET = ITEMS.register("explosive_bullet",
             () -> new AmmoItem(new Item.Properties(), AmmoList.EXPLOSIVE_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get()));
     public static final RegistryObject<AmmoItem> FIRE_BULLET = ITEMS.register("fire_bullet",
