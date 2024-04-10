@@ -25,26 +25,6 @@ public class ScopeGun extends Gun {
         return UseAnim.SPYGLASS;
     }
 
-    @Override
-    public int getShootingDelay() {
-        return 20;
-    }
-
-    @Override
-    public int getMaxAmmo() {
-        return 15;
-    }
-
-    @Override
-    public int getWeaponReloadCooldown() {
-        return 50;
-    }
-
-    @Override
-    public boolean twoHands() {
-        return true;
-    }
-
     public boolean isScoping(ItemStack gun) {
         CompoundTag compoundtag = gun.getTag();
         if (compoundtag == null || !compoundtag.contains("scoping")) {
