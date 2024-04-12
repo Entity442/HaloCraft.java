@@ -2,7 +2,7 @@ package com.harby.halocraft.Client.Renderers;
 
 import com.harby.halocraft.Client.Models.PlasmaProjectileModel;
 import com.harby.halocraft.HaloCraft;
-import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
+import com.harby.halocraft.HaloEntities.Projectiles.PlasmaEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -15,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class PlasmaProjectileRenderer<T extends PlasmaProjectileEntity> extends EntityRenderer<T> {
+public class PlasmaProjectileRenderer<T extends PlasmaEntity> extends EntityRenderer<T> {
     private final PlasmaProjectileModel model;
     private static final ResourceLocation TEXTURE = new ResourceLocation(HaloCraft.MODID,
             "textures/entity/plasma.png");

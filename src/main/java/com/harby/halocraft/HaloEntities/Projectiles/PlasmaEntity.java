@@ -11,20 +11,20 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
-public class PlasmaProjectileEntity extends BaseProjectileEntity {
+public class PlasmaEntity extends BaseProjectileEntity {
     private static final EntityDataAccessor<Integer> COLOR =
-            SynchedEntityData.defineId(PlasmaProjectileEntity.class, EntityDataSerializers.INT);
+            SynchedEntityData.defineId(PlasmaEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TEMPERATURE =
-            SynchedEntityData.defineId(PlasmaProjectileEntity.class, EntityDataSerializers.INT);
+            SynchedEntityData.defineId(PlasmaEntity.class, EntityDataSerializers.INT);
 
-    public PlasmaProjectileEntity(Level level, Entity livingEntity, AmmoList ammo, float speed) {
+    public PlasmaEntity(Level level, Entity livingEntity, AmmoList ammo, float speed) {
         super(level, livingEntity, ammo, HaloEntities.PLASMA_BALL.get(), speed);
         if (ammo.getType() != AmmoTypes.PLASMA) {
             throw new IllegalArgumentException("PlasmaProjectileEntity can only be created with Plasma ammo.");
         }
     }
 
-    public PlasmaProjectileEntity(Level level, EntityType<PlasmaProjectileEntity> entityType) {
+    public PlasmaEntity(Level level, EntityType<PlasmaEntity> entityType) {
         super(level, entityType);
     }
 
