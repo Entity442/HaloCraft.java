@@ -17,9 +17,9 @@ public class FrozenBullet extends BaseBullet{
     }
 
     @Override
-    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult result) {
-        BlockState state = bullet.level().getBlockState(result.getBlockPos());
-        if (state.is(Blocks.WATER)) bullet.level().setBlock(result.getBlockPos(), Blocks.ICE.defaultBlockState(), 2);
+    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult blockHitResult) {
+        BlockState state = bullet.level().getBlockState(blockHitResult.getBlockPos());
+        if (state.is(Blocks.WATER)) bullet.level().setBlock(blockHitResult.getBlockPos(), Blocks.ICE.defaultBlockState(), 2);
     }
     @Override
     public DamageSource getDamageSource(DamageSources damageSources, BaseProjectileEntity bullet, LivingEntity owner) {

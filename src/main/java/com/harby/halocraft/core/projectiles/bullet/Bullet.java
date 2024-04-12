@@ -12,7 +12,7 @@ public class Bullet extends BaseBullet {
     }
 
     @Override
-    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult result) {
+    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult blockHitResult) {
 
     }
 

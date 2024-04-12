@@ -16,7 +16,7 @@ public class ExplosiveBullet extends BaseBullet{
     }
 
     @Override
-    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult result) {
+    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult blockHitResult) {
         bullet.level().explode(bullet, bullet.getX(), bullet.getY(), bullet.getZ(), 0.5F, Level.ExplosionInteraction.BLOCK);
     }
     @Override

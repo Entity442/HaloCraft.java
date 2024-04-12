@@ -20,11 +20,11 @@ public class FireBullet extends BaseBullet {
     }
 
     @Override
-    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult result) {
+    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult blockHitResult) {
         if (!bullet.level().isClientSide()) {
-            BlockState state = bullet.level().getBlockState(result.getBlockPos());
-            if (state.isFlammable(bullet.level(), result.getBlockPos(), result.getDirection())) {
-                BlockPos pos = result.getBlockPos().relative(result.getDirection());
+            BlockState state = bullet.level().getBlockState(blockHitResult.getBlockPos());
+            if (state.isFlammable(bullet.level(), blockHitResult.getBlockPos(), blockHitResult.getDirection())) {
+                BlockPos pos = blockHitResult.getBlockPos().relative(blockHitResult.getDirection());
                 BlockState fire = Blocks.FIRE.defaultBlockState();
                 bullet.level().setBlock(pos, fire, 2);
             }
