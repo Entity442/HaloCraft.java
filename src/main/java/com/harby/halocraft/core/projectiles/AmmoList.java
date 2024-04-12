@@ -1,6 +1,7 @@
 package com.harby.halocraft.core.projectiles;
 
 import com.harby.halocraft.core.projectiles.bullet.*;
+import com.harby.halocraft.core.projectiles.needler.NeedlerShard;
 import com.harby.halocraft.core.projectiles.plasma.PlasmaBall;
 
 public enum AmmoList {
@@ -10,7 +11,8 @@ public enum AmmoList {
     FIRE_BULLET(new FireBullet(), AmmoTypes.BULLET),
     EXPLOSIVE_BULLET(new ExplosiveBullet(), AmmoTypes.BULLET),
     FROZEN_BULLET(new FrozenBullet(), AmmoTypes.BULLET),
-    PlASMA_BALL(new PlasmaBall(), AmmoTypes.PLASMA);
+    PlASMA_BALL(new PlasmaBall(), AmmoTypes.PLASMA),
+    NEEDLER_SHARD(new NeedlerShard(), AmmoTypes.NEEDLER);
 
     private final BaseAmmo ba;
     private final AmmoTypes at;

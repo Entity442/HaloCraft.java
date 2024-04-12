@@ -5,7 +5,8 @@ import com.harby.halocraft.HaloEntities.Alien.Grunt;
 import com.harby.halocraft.HaloEntities.Alien.Moa;
 import com.harby.halocraft.HaloEntities.Projectiles.BeamEntity;
 import com.harby.halocraft.HaloEntities.Projectiles.BulletEntity;
-import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
+import com.harby.halocraft.HaloEntities.Projectiles.NeedlerEntity;
+import com.harby.halocraft.HaloEntities.Projectiles.PlasmaEntity;
 import com.harby.halocraft.HaloEntities.Vehicles.Banshe;
 import com.harby.halocraft.HaloEntities.Vehicles.CarEntity;
 import com.harby.halocraft.HaloEntities.Vehicles.F_19;
@@ -63,8 +64,12 @@ public class HaloEntities {
             EntityType.Builder.of((EntityType<BeamEntity> entityType, Level level) -> new BeamEntity(level), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(1f, 1f));
 
-    public static final RegistryObject<EntityType<PlasmaProjectileEntity>> PLASMA_BALL = register("plasma_projectile",
-            EntityType.Builder.of((EntityType<PlasmaProjectileEntity> entityType, Level level) -> new PlasmaProjectileEntity(level, entityType), MobCategory.MISC)
+    public static final RegistryObject<EntityType<PlasmaEntity>> PLASMA_BALL = register("plasma_projectile",
+            EntityType.Builder.of((EntityType<PlasmaEntity> entityType, Level level) -> new PlasmaEntity(level, entityType), MobCategory.MISC)
+                    .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
+
+    public static final RegistryObject<EntityType<NeedlerEntity>> NEEDLER_SHARD = register("needler_shard_projectile",
+            EntityType.Builder.of((EntityType<NeedlerEntity> entityType, Level level) -> new NeedlerEntity(level, entityType), MobCategory.MISC)
                     .setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.4f));
 
 }
