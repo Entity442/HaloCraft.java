@@ -15,7 +15,13 @@ public class HaloCreativeTab {
     public static final RegistryObject<CreativeModeTab> HALOCRAFT = HALO_TABS.register("halocraft",
             () -> CreativeModeTab.builder().title(Component.translatable("item_group.halocraft.halocraft"))
                     .icon(Items.NETHER_STAR::getDefaultInstance).displayItems((parameters, output) -> {
-                        HaloItems.HALO_ITEMS.forEach(item -> output.accept(item.asItem()));
+                        HaloItems.HALO_ITEMS.stream().filter(item -> !HaloItems.GUNS_ITEMS.contains(item)).forEach(item -> output.accept(item.asItem()));
+                    }).build()
+    );
+    public static final RegistryObject<CreativeModeTab> HALOGUNS = HALO_TABS.register("haloguns",
+            () -> CreativeModeTab.builder().title(Component.translatable("item_group.halocraft.haloguns"))
+                    .icon(HaloItems.SNIPER_RIFFLE.get()::getDefaultInstance).displayItems((parameters, output) -> {
+                        HaloItems.GUNS_ITEMS.forEach(item -> output.accept(item.asItem()));
                     }).build()
     );
 
