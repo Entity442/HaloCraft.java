@@ -2,7 +2,7 @@ package com.harby.halocraft.HaloEntities.Vehicles;
 
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
-import com.harby.halocraft.HaloEntities.Projectiles.PlasmaProjectileEntity;
+import com.harby.halocraft.HaloEntities.Projectiles.PlasmaEntity;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.Message.KeyBindList;
 import com.harby.halocraft.core.HaloConfig;
@@ -58,7 +58,7 @@ public class Ghost extends BasicVehicleEntity {
         if (this.shooting_ticks > 0){
             --shooting_ticks;
             if (this.tickCount % 5 != 0){
-                PlasmaProjectileEntity bulletEntity = new PlasmaProjectileEntity(this.level(),this, AmmoList.PlASMA_BALL, 5.0F);
+                PlasmaEntity bulletEntity = new PlasmaEntity(this.level(),this, AmmoList.PlASMA_BALL, 5.0F);
                 bulletEntity.setOwner(player);
                 bulletEntity.setDamage(10.0F);
                 bulletEntity.setTemperature(500);
