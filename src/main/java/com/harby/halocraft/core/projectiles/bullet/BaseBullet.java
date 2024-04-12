@@ -6,6 +6,8 @@ import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class BaseBullet extends BaseAmmo {
@@ -39,5 +41,15 @@ public abstract class BaseBullet extends BaseAmmo {
     @Override
     public void onShoot(BaseProjectileEntity bullet) {
         bullet.level().playSound(bullet, bullet.getOnPos(), SoundEvents.FIREWORK_ROCKET_BLAST_FAR, SoundSource.AMBIENT, 4F, 2F);
+    }
+
+    @Override
+    public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult blockHitResult) {
+        bullet.level().playSound(bullet, blockHitResult.getBlockPos(),SoundEvents.FIREWORK_ROCKET_BLAST_FAR,SoundSource.AMBIENT,1.0F, 1.0F);
+    }
+
+    @Override
+    public void onHitEntity(BaseProjectileEntity bullet, EntityHitResult entityHitResult) {
+        bullet.level().playSound(bullet,entityHitResult.getEntity().getOnPos(), SoundEvents.FIREWORK_ROCKET_BLAST_FAR,SoundSource.AMBIENT, 0.5F, 2.0F);
     }
 }
