@@ -24,13 +24,13 @@ public class HaloItems {
         ITEMS.register(eventBus);
     }
 
-    public  static final RegistryObject<TestArmor> TEST = ITEMS.register("test",
+    public static final RegistryObject<TestArmor> TEST = ITEMS.register("test",
             () -> new TestArmor(HaloBaseArmor.Type.HELMET));
-    public  static final RegistryObject<TestArmor> TEST2 = ITEMS.register("test2",
+    public static final RegistryObject<TestArmor> TEST2 = ITEMS.register("test2",
             () -> new TestArmor(HaloBaseArmor.Type.CHESTPLATE));
-    public  static final RegistryObject<TestArmor> TEST3 = ITEMS.register("test3",
+    public static final RegistryObject<TestArmor> TEST3 = ITEMS.register("test3",
             () -> new TestArmor(HaloBaseArmor.Type.LEGGINGS));
-    public  static final RegistryObject<TestArmor> TEST4 = ITEMS.register("test4",
+    public static final RegistryObject<TestArmor> TEST4 = ITEMS.register("test4",
             () -> new TestArmor(HaloBaseArmor.Type.BOOTS));
 
     public static final RegistryObject<Gun> ASSAULT_RIFFLE = ITEMS.register("assault_riffle",
@@ -40,7 +40,10 @@ public class HaloItems {
     public static final RegistryObject<ScopeGun> GOLDEN_SNIPER_RIFFLE = ITEMS.register("golden_sniper_riffle",
             () -> new ScopeGun(new Item.Properties(), true, 0.1f));
     public static final RegistryObject<Gun> PISTOL = ITEMS.register("pistol",
-            () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 10, 8, 60, 6.0f, 10));
+            () -> new Gun(new Item.Properties(), false, AmmoTypes.BULLET, 10, 8, 40, 6.0f, 10));
+
+    public static final RegistryObject<PlasmaGun> PLASMA_PISTOL = ITEMS.register("plasma_pistol",
+            () -> new PlasmaGun(new Item.Properties(), false, 10, 8, 80, 6.0f, 10, 200));
 
     public static final RegistryObject<EnergieSword> ENERGIE_SWORD = ITEMS.register("energie_sword",
             () -> new EnergieSword(new Item.Properties().durability(10000)));
@@ -53,8 +56,9 @@ public class HaloItems {
     public static final RegistryObject<AmmoItem> FIRE_BULLET = ITEMS.register("fire_bullet",
             () -> new AmmoItem(new Item.Properties(), AmmoList.FIRE_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get()));
     public static final RegistryObject<AmmoItem> FROZEN_BULLET = ITEMS.register("frozen_bullet",
-            () -> new AmmoItem(new Item.Properties(),AmmoList.FROZEN_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get()));
+            () -> new AmmoItem(new Item.Properties(), AmmoList.FROZEN_BULLET, ASSAULT_RIFFLE.get(), SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get()));
     public static final RegistryObject<AmmoItem> PENETRATING_BULLET = ITEMS.register("penetrating_bullet",
-            () -> new AmmoItem(new Item.Properties(),AmmoList.PENETRATING_BULLET, SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get()));
-
+            () -> new AmmoItem(new Item.Properties(), AmmoList.PENETRATING_BULLET, SNIPER_RIFFLE.get(), GOLDEN_SNIPER_RIFFLE.get()));
+    public static final RegistryObject<AmmoItem> PLASMA_CAN = ITEMS.register("plasma_can",
+            () -> new AmmoItem(new Item.Properties(), AmmoList.PlASMA_BALL, PLASMA_PISTOL.get()));
 }
