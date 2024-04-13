@@ -1,6 +1,7 @@
 package com.harby.halocraft.core.projectiles;
 
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
+import com.harby.halocraft.HaloItems.Gun;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +35,6 @@ public abstract class BaseAmmo {
      */
     public abstract AmmoList getBulletType();
 
-    public abstract void onShoot(BaseProjectileEntity bullet);
+    public abstract void onShoot(BaseProjectileEntity bullet, Gun gun);
 
 }
