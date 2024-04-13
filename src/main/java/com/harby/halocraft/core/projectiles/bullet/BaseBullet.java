@@ -1,6 +1,7 @@
 package com.harby.halocraft.core.projectiles.bullet;
 
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
+import com.harby.halocraft.HaloItems.Gun;
 import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
@@ -33,13 +34,13 @@ public abstract class BaseBullet extends BaseAmmo {
         double pTicks = 0d;
         while (pTicks < 1d) {
             Vec3 vec = (this.movement(bullet.getPosition(0), bullet.getShoutedPos(), bullet.getShoutedDirection(), bullet.tickCount - 1 + pTicks));
-            bullet.level().addAlwaysVisibleParticle(HaloParticles.PLASMA_TRAIL.get(), vec.x, vec.y, vec.z, 1, 0.3d, 1);
-            pTicks += 0.1d;
+            bullet.level().addAlwaysVisibleParticle(HaloParticles.PLASMA_TRAIL.get(), vec.x, vec.y, vec.z, 1, 1, 1);
+            pTicks += 0.2d;
         }
     }
 
     @Override
-    public void onShoot(BaseProjectileEntity bullet) {
+    public void onShoot(BaseProjectileEntity bullet, Gun gun) {
         bullet.level().playSound(bullet, bullet.getOnPos(), SoundEvents.FIREWORK_ROCKET_BLAST_FAR, SoundSource.AMBIENT, 4F, 2F);
     }
 
