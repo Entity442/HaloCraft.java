@@ -84,6 +84,7 @@ public class Gun extends Item {
             AmmoList ammo = this.getAmmoType(stack);
             BaseProjectileEntity bulletEntity = ammo.getType().createBullet(level, livingEntity, ammo, this.getSpeed());
             bulletEntity.setDamage(this.getDamage());
+            ammo.get().onShoot(bulletEntity, this);
             level.addFreshEntity(bulletEntity);
             MinecraftForge.EVENT_BUS.post(new GunEvents.GunShootingEvent((Player) livingEntity, this, livingEntity.getUsedItemHand()));
             this.setAmountAmmoStored(stack, this.getAmountAmmoStored(stack) - 1);
@@ -93,7 +94,6 @@ public class Gun extends Item {
                     player.displayClientMessage(Component.translatable("message.halocraft.out_of_ammo"), true);
                 }
             }
-            ammo.get().onShoot(bulletEntity);
             this.shootingTicks = this.getShootingDelay();
         }
     }
