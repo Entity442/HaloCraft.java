@@ -32,14 +32,17 @@ public class ModLangGenerator extends LanguageProvider {
             String data = br.readLine();
             Gson gson = new Gson();
             JsonArray translates = gson.fromJson(data, JsonArray.class);
+            Integer translated = 0;
             for (int i = 0; i < translates.size(); i++) {
                 JsonObject tr = translates.get(i).getAsJsonObject();
                 //Get information
                 String key = tr.get("Full Unique Name (auto)").getAsString();
                 String trans = tr.get(lang).getAsString();
+                if (key.isBlank() || trans.isBlank()) continue;
                 this.add(key, trans);
+                translated++;
             }
-            HaloCraft.LOGGER.info("Loaded " + translates.size() + " translations for language " + lang);
+            HaloCraft.LOGGER.info("Loaded "+translated+"/" + translates.size() + " translations for language " + lang);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
