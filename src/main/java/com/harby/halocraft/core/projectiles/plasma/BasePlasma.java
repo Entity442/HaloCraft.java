@@ -2,6 +2,8 @@ package com.harby.halocraft.core.projectiles.plasma;
 
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
 import com.harby.halocraft.HaloEntities.Projectiles.PlasmaEntity;
+import com.harby.halocraft.HaloItems.Gun;
+import com.harby.halocraft.HaloItems.PlasmaGun;
 import com.harby.halocraft.core.HaloParticles;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
@@ -25,13 +27,16 @@ public abstract class BasePlasma extends BaseAmmo {
 
     @Override
     public void onMove(BaseProjectileEntity bullet) {
+        if (bullet.tickCount == 0) return;
         if (bullet instanceof PlasmaEntity plasmaBall) {
             //this code allow more particules, so between the position at tick
             double pTicks = 0d;
             while (pTicks < 1d) {
                 Vec3 vec = (this.movement(plasmaBall.getPosition(0), plasmaBall.getShoutedPos(), plasmaBall.getShoutedDirection(), plasmaBall.tickCount - 1 + pTicks));
-                plasmaBall.level().addAlwaysVisibleParticle(HaloParticles.PLASMA_TRAIL.get(), vec.x, vec.y, vec.z, plasmaBall.getColor(), plasmaBall.getColor(), plasmaBall.getColor());
+                int[] color = plasmaBall.getRGBColor();
+                plasmaBall.level().addAlwaysVisibleParticle(HaloParticles.PLASMA_TRAIL.get(), vec.x, vec.y, vec.z, color[0]/255f, color[1]/255f, color[2]/255f);
                 pTicks += 0.05d;
+
             }
         }
     }
@@ -43,26 +48,25 @@ public abstract class BasePlasma extends BaseAmmo {
 
     @Override
     public void onHitEntity(BaseProjectileEntity bullet, EntityHitResult entityHitResult) {
-        if (!bullet.level().isClientSide() && bullet instanceof PlasmaEntity e) {
+        if (bullet instanceof PlasmaEntity ball) {
             if (entityHitResult.getEntity() instanceof LivingEntity livingEntity) {
-                bullet.level().playLocalSound(entityHitResult.getLocation().x, entityHitResult.getLocation().y, entityHitResult.getLocation().z, SoundEvents.FIRECHARGE_USE, SoundSource.AMBIENT, 0.5F, 2.6F, false);
-                if (e.getTemperature() >= 200) {
-                    livingEntity.setSecondsOnFire(e.getTemperature()/200);
+                ball.level().playLocalSound(entityHitResult.getLocation().x, entityHitResult.getLocation().y, entityHitResult.getLocation().z, SoundEvents.FIRECHARGE_USE, SoundSource.AMBIENT, 0.5F, 2.6F, false);
+                if (ball.getTemperature() >= 200) {
+                    livingEntity.setSecondsOnFire(ball.getTemperature() / 200);
                 }
             }
         }
     }
 
     public void onHitBlock(BaseProjectileEntity bullet, BlockHitResult result) {
-        if (!bullet.level().isClientSide() && bullet instanceof PlasmaEntity e) {
-            BlockState state = e.level().getBlockState(result.getBlockPos());
-            bullet.level().playLocalSound(result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundEvents.FIRECHARGE_USE, SoundSource.AMBIENT, 0.5F, 2.6F, false);
-            if (e.getTemperature() >= 500 && state.isFlammable(e.level(), result.getBlockPos(), result.getDirection())) {
-                BlockPos pos = result.getBlockPos().relative(result.getDirection());
-                BlockState fire = Blocks.FIRE.defaultBlockState();
-                e.level().setBlock(pos, fire, 2);
-            }
-        }
+        if (bullet instanceof PlasmaEntity ball) {
+        BlockState state = ball.level().getBlockState(result.getBlockPos());
+        ball.level().playLocalSound(result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundEvents.FIRECHARGE_USE, SoundSource.AMBIENT, 0.5F, 2.6F, false);
+        if (ball.getTemperature() >= 500 && state.isFlammable(ball.level(), result.getBlockPos(), result.getDirection())) {
+            BlockPos pos = result.getBlockPos().relative(result.getDirection());
+            BlockState fire = Blocks.FIRE.defaultBlockState();
+            ball.level().setBlock(pos, fire, 2);
+        }}
     }
 
     public Vec3 movement(Vec3 pos, Vec3 shoutedPos, Vec3 shoutedDirection, double tickCount) {
@@ -78,7 +82,10 @@ public abstract class BasePlasma extends BaseAmmo {
     }
 
     @Override
-    public void onShoot(BaseProjectileEntity bullet) {
-
+    public void onShoot(BaseProjectileEntity bullet, Gun gun) {
+        if (bullet instanceof PlasmaEntity plasmaBall && gun instanceof PlasmaGun pgun) {
+            plasmaBall.setTemperature(200);//pgun.getPlasma_temperature());
+            bullet.playSound(SoundEvents.FIRE_EXTINGUISH, 0.6F, 0.8F);
+        }
     }
 }

@@ -32,11 +32,8 @@ public class PlasmaProjectileRenderer<T extends PlasmaEntity> extends EntityRend
         stack.mulPose(Axis.YP.rotationDegrees(180.0F - value));
         stack.mulPose(Axis.ZP.rotationDegrees(-180F));
         VertexConsumer vertexConsumer = source.getBuffer(RenderType.entityTranslucentEmissive(TEXTURE));
-        int i = type.getColor();
-        float r = (float) (i >> 16 & 255) / 255.0F;
-        float g = (float) (i >> 8 & 255) / 255.0F;
-        float b = (float) (i & 255) / 255.0F;
-        this.model.renderToBuffer(stack, vertexConsumer, value3, OverlayTexture.NO_OVERLAY, r, g, b, 1.0F);
+        int[] rgb = type.getRGBColor();
+        this.model.renderToBuffer(stack, vertexConsumer, value3, OverlayTexture.NO_OVERLAY, rgb[0], rgb[1], rgb[2],1);
 
         stack.popPose();
         super.render(type, value, value2, stack, source, value3);
