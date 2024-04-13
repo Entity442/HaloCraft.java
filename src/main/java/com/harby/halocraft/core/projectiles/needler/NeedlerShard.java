@@ -1,6 +1,7 @@
 package com.harby.halocraft.core.projectiles.needler;
 
 import com.harby.halocraft.HaloEntities.Projectiles.BaseProjectileEntity;
+import com.harby.halocraft.HaloItems.Gun;
 import com.harby.halocraft.core.projectiles.AmmoList;
 import com.harby.halocraft.core.projectiles.AmmoTypes;
 import com.harby.halocraft.core.projectiles.BaseAmmo;
@@ -11,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 public class NeedlerShard extends BaseAmmo {
     @Override
     public AmmoTypes getAmmoType() {
-        return null;
+        return AmmoTypes.NEEDLER;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class NeedlerShard extends BaseAmmo {
         x += shoutedDirection.x * tickCount;
         y += shoutedDirection.y * tickCount;
         z += shoutedDirection.z * tickCount;
-        //gravity: (here = -0.2 block / ticks)
+        //gravity: (here = -0.4 block / ticks)
         y -= 0.2 * tickCount * tickCount;
         return new Vec3(x, y, z);
     }
@@ -48,7 +49,7 @@ public class NeedlerShard extends BaseAmmo {
     }
 
     @Override
-    public void onShoot(BaseProjectileEntity bullet) {
+    public void onShoot(BaseProjectileEntity bullet, Gun gun) {
 
     }
 }
