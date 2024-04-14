@@ -237,6 +237,15 @@ public abstract class BaseProjectileEntity extends Projectile {
         }
     }
 
+    @Override
+    public void lerpMotion(double pX, double pY, double pZ) {
+        super.lerpMotion(pX, pY, pZ);
+        BaseAmmo projectile = this.getProjectile().get();
+        if (projectile == null) return;
+        Vec3 posAfter = (projectile.movement(this.getPosition(0), this.getShoutedPos(), this.getShoutedDirection(), this.tickCount));
+        this.setPos(posAfter);
+    }
+
     private HitResult blockHit(Vec3 posBefore, Vec3 posAfter) {
         return this.level().clip(new ClipContext(posBefore, posAfter, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
     }
