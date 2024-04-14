@@ -1,5 +1,7 @@
 package com.harby.halocraft.HaloBlocks;
 
+import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
+import com.harby.halocraft.HaloEntities.BaseClasses.VehiculeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,19 +17,19 @@ public class Road extends Block {
     @Override
     public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
         super.stepOn(pLevel, pPos, pState, pEntity);
-        if (!pLevel.isClientSide && pEntity instanceof LivingEntity livingEntity) {
-            int amplifier = 1;
-            /*if (pEntity instanceof BasicVehicleEntity v) {
-                amplifier = 0;
-                if (v.getVehiculeTypes() == VehiculeTypes.TIRED) {
-                    amplifier = 3;
-                }
-                if (v.getVehiculeTypes() == VehiculeTypes.HOVERING) {
-                    amplifier = 2;
-                }
-                v.spee
-            }*/
-            livingEntity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED, 1, amplifier, false, false, false));
+        if (pLevel.isClientSide) return;
+        if (pEntity instanceof LivingEntity livingEntity) {
+            livingEntity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED, 1, 1, false, false, false));
+        }
+        if (pEntity instanceof BasicVehicleEntity v) {
+            float amplifier = 1F;
+            if (v.getVehiculeTypes() == VehiculeTypes.TIRED) {
+                amplifier = 2F;
+            }
+            if (v.getVehiculeTypes() == VehiculeTypes.HOVERING) {
+                amplifier = 1.5F;
+            }
+            //add here vehicule speed modifier
         }
     }
 
