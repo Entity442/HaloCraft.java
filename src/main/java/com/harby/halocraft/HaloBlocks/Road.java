@@ -3,18 +3,13 @@ package com.harby.halocraft.HaloBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class LinedRoad extends RotatedPillarBlock {
-    public LinedRoad(Properties pProperties) {
+public class Road extends Block {
+    public Road(Properties pProperties) {
         super(pProperties);
-    }
-
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return this.defaultBlockState().setValue(AXIS, pContext.getNearestLookingDirection().getOpposite().getAxis());
     }
 
     @Override
@@ -35,4 +30,5 @@ public class LinedRoad extends RotatedPillarBlock {
             livingEntity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED, 1, amplifier, false, false, false));
         }
     }
+
 }
