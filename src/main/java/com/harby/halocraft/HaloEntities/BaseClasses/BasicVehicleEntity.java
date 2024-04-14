@@ -49,11 +49,12 @@ public class BasicVehicleEntity extends Entity {
     private int controlDownTicks = 0;
     private int turnRightTicks = 0;
     private int turnLeftTicks = 0;
+    private VehiculeTypes vehiculeTypes;
 
-    public BasicVehicleEntity(EntityType<?> type, Level level) {
+    public BasicVehicleEntity(EntityType<?> type, Level level, VehiculeTypes vehiculeTypes) {
         super(type, level);
         this.blocksBuilding = true;
-
+        this.vehiculeTypes = vehiculeTypes;
     }
 
     @Override
@@ -76,9 +77,9 @@ public class BasicVehicleEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.putFloat("damage",this.getDamageLevel());
-        tag.putFloat("acceleration",this.getAccelerationLevel());
-        tag.putInt("tint",this.getTint());
+        tag.putFloat("damage", this.getDamageLevel());
+        tag.putFloat("acceleration", this.getAccelerationLevel());
+        tag.putInt("tint", this.getTint());
     }
 
     @Override
@@ -86,31 +87,49 @@ public class BasicVehicleEntity extends Entity {
         return new ClientboundAddEntityPacket(this, this.getId());
     }
 
-    public void setTint(int i){
-        this.entityData.set(TINT,i);
+    public void setTint(int i) {
+        this.entityData.set(TINT, i);
     }
-    public int getTint(){
+
+    public int getTint() {
         return this.entityData.get(TINT);
     }
-    public float getDamageLevel(){
+
+    public float getDamageLevel() {
         return entityData.get(DAMAGE_LEVEL);
     }
-    public void setDamageLevel(float f){
-        this.entityData.set(DAMAGE_LEVEL,f);
+
+    public void setDamageLevel(float f) {
+        this.entityData.set(DAMAGE_LEVEL, f);
     }
-    public float getAccelerationLevel(){
+
+    public float getAccelerationLevel() {
         return entityData.get(ACCELERATION);
     }
-    public void setAcceleration(float f){this.entityData.set(ACCELERATION,f);}
-    public float getMaxVehicleHealth(){
+
+    public void setAcceleration(float f) {
+        this.entityData.set(ACCELERATION, f);
+    }
+
+    public float getMaxVehicleHealth() {
         return 40.0F;
     }
-    public float getTopSpeed(){
+
+    public float getTopSpeed() {
         return 0.65F;
     }
-    public float speed(){return 0.8F;}
-    public float waterSpeed(){return 0.1F;}
-    public float flyingSpeed(){return 0.1F;}
+
+    public float speed() {
+        return 0.8F;
+    }
+
+    public float waterSpeed() {
+        return 0.1F;
+    }
+
+    public float flyingSpeed() {
+        return 0.1F;
+    }
 
 
     public boolean hurt(DamageSource source, float value) {
@@ -121,7 +140,7 @@ public class BasicVehicleEntity extends Entity {
             this.markHurt();
             this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
             this.playSound(SoundEvents.METAL_BREAK);
-            boolean flag = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
+            boolean flag = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
             if (flag || this.getDamageLevel() > this.getMaxVehicleHealth()) {
                 if (!flag && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                     this.spawnAtLocation(this.getDropItem());
@@ -135,16 +154,8 @@ public class BasicVehicleEntity extends Entity {
             return true;
         }
     }
-    public boolean isWaterVehicle(){
-        return false;
-    }
-    public boolean isFlyingVehicle(){return false;}
-    public boolean isFlyingHoveringVehicle(){return false;}
-    public boolean isHoveringVehicle(){
-        return false;
-    }
 
-    public float setMinFlyingSpeed(){
+    public float setMinFlyingSpeed() {
         return 0.5f;
     }
 
@@ -153,16 +164,17 @@ public class BasicVehicleEntity extends Entity {
         return ItemStack.EMPTY.getItem();
     }
 
-    public Vec3 getVector(){
+    public Vec3 getVector() {
         return this.movementVector;
     }
-    public void setVector(Vec3 vec3){
+
+    public void setVector(Vec3 vec3) {
         this.movementVector = vec3;
     }
 
     @Override
     public boolean isNoGravity() {
-        return this.isFlyingHoveringVehicle();
+        return this.getVehiculeTypes() == VehiculeTypes.FLYING;
     }
 
     @Override
@@ -171,7 +183,7 @@ public class BasicVehicleEntity extends Entity {
         this.xRotO = this.getXRot();
         this.yRotO = Mth.wrapDegrees(this.getYRot());
         float acceleration = this.getAccelerationLevel();
-        if (this.isWaterVehicle() || this.isFlyingHoveringVehicle() || this.isFlyingVehicle()){
+        if (this.getVehiculeTypes() == VehiculeTypes.HOVERING || this.getVehiculeTypes() == VehiculeTypes.FLYING || this.getVehiculeTypes() == VehiculeTypes.WATER) {
             if (controlDownTicks > 0) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0, -0.08, 0));
                 controlDownTicks--;
@@ -216,42 +228,35 @@ public class BasicVehicleEntity extends Entity {
                 this.setDeltaMovement(this.getDeltaMovement().add(vec3));
             }
 
-            if (this.isFlyingHoveringVehicle() && this.getFirstPassenger() != null){
+            if (this.getVehiculeTypes() == VehiculeTypes.HOVERING && this.getFirstPassenger() != null) {
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().multiply(flyingSpeed(), flyingSpeed(), flyingSpeed()));
-            }
-            else if (this.isFlyingVehicle() && this.getFirstPassenger() != null){
+            } else if (this.getVehiculeTypes() == VehiculeTypes.FLYING && this.getFirstPassenger() != null) {
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().multiply(flyingSpeed(), flyingSpeed(), flyingSpeed()));
-                if (!this.onGround()){
-                    Vec3 vec3 = (new Vec3(0.0D, 0.0D, 0.0D)).yRot(-this.getYRot() * ((float)Math.PI / 180F) - ((float)Math.PI / 2F));
+                if (!this.onGround()) {
+                    Vec3 vec3 = (new Vec3(0.0D, 0.0D, 0.0D)).yRot(-this.getYRot() * ((float) Math.PI / 180F) - ((float) Math.PI / 2F));
                     this.setDeltaMovement(this.getDeltaMovement().add(vec3));
-                    if (this.getAccelerationLevel() < this.setMinFlyingSpeed() && this.controlUpTicks <= 0){
+                    if (this.getAccelerationLevel() < this.setMinFlyingSpeed() && this.controlUpTicks <= 0) {
                         float fallingV = this.setMinFlyingSpeed() - this.getAccelerationLevel();
-                        this.setDeltaMovement(this.getDeltaMovement().add(0,-fallingV,0));
+                        this.setDeltaMovement(this.getDeltaMovement().add(0, -fallingV, 0));
                     }
                 }
-            }
-
-            else if (this.isInWaterOrBubble() && this.isWaterVehicle()) {
+            } else if (this.isInWaterOrBubble() && this.getVehiculeTypes() == VehiculeTypes.WATER) {
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().multiply(waterSpeed(), waterSpeed(), waterSpeed()));
-            }
-
-            else if (this.isHoveringVehicle()) {
-                if (this.isInFluidType()){
+            } else if (this.getVehiculeTypes() == VehiculeTypes.HOVERING) {
+                if (this.isInFluidType()) {
                     this.setDeltaMovement(this.getDeltaMovement().add(0, 0.1F, 0));
-                }else{
+                } else {
                     this.setDeltaMovement(this.getDeltaMovement().add(0, -0.05F, 0));
                 }
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().multiply(flyingSpeed(), flyingSpeed(), flyingSpeed()));
-            }
-
-            else {
+            } else {
                 this.setDeltaMovement(this.getDeltaMovement().add(0, -0.3F, 0));
                 this.move(MoverType.SELF, this.getDeltaMovement().scale(0.9F));
-                this.setDeltaMovement(this.getDeltaMovement().multiply(speed(),speed(),speed()));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(speed(), speed(), speed()));
             }
         }
         float xRotSet = Mth.clamp(-(float) this.getDeltaMovement().y * 2F, -1.0F, 1.0F) * -(float) (180F / (float) Math.PI) * (float) Math.signum(getAccelerationLevel() + 0.01);
@@ -359,7 +364,6 @@ public class BasicVehicleEntity extends Entity {
     }
 
 
-
     public boolean isPickable() {
         return !this.isRemoved();
     }
@@ -375,13 +379,13 @@ public class BasicVehicleEntity extends Entity {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (!player.level().isClientSide){
-            if (player.isShiftKeyDown()){
+        if (!player.level().isClientSide) {
+            if (player.isShiftKeyDown()) {
                 ItemStack stack = player.getItemInHand(hand);
-                if (stack.getItem() instanceof DyeItem dyeItem){
+                if (stack.getItem() instanceof DyeItem dyeItem) {
                     this.setTint(dyeItem.getDyeColor().getFireworkColor());
                 }
-            }else{
+            } else {
                 player.startRiding(this);
             }
             this.gameEvent(GameEvent.ENTITY_INTERACT);
@@ -398,5 +402,9 @@ public class BasicVehicleEntity extends Entity {
                 controlDownTicks = 10;
             }
         }
+    }
+
+    public VehiculeTypes getVehiculeTypes() {
+        return vehiculeTypes;
     }
 }

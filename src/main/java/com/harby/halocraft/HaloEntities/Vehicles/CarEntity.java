@@ -1,27 +1,14 @@
 package com.harby.halocraft.HaloEntities.Vehicles;
 
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
+import com.harby.halocraft.HaloEntities.BaseClasses.VehiculeTypes;
 import com.harby.halocraft.core.HaloConfig;
 import com.harby.halocraft.core.HaloEntities;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
 
 public class CarEntity extends BasicVehicleEntity {
     private final CarPartEntity[] subEntities;
@@ -29,7 +16,7 @@ public class CarEntity extends BasicVehicleEntity {
     public final CarPartEntity gun;
 
     public CarEntity(Level level) {
-        super(HaloEntities.CAR.get(), level);
+        super(HaloEntities.CAR.get(), level, VehiculeTypes.TIRED);
         this.setMaxUpStep(1.0F);
         this.engine = new CarPartEntity(this, "engine", 2.0F, 1.2F);
         this.gun = new CarPartEntity(this, "gun", 2.0F, 1.2F);

@@ -1,13 +1,14 @@
 package com.harby.halocraft.HaloEntities.Vehicles;
 
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
+import com.harby.halocraft.HaloEntities.BaseClasses.VehiculeTypes;
 import com.harby.halocraft.core.HaloConfig;
 import com.harby.halocraft.core.HaloEntities;
 import net.minecraft.world.level.Level;
 
 public class Banshe extends BasicVehicleEntity {
     public Banshe(Level level) {
-        super(HaloEntities.BANSHE.get(), level);
+        super(HaloEntities.BANSHE.get(), level, VehiculeTypes.FLYING);
     }
 
     @Override
@@ -18,11 +19,6 @@ public class Banshe extends BasicVehicleEntity {
     @Override
     public float flyingSpeed() {
         return 0.9F;
-    }
-
-    @Override
-    public boolean isFlyingVehicle() {
-        return true;
     }
 
     @Override

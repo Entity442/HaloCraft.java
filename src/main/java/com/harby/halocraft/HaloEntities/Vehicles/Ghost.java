@@ -2,6 +2,7 @@ package com.harby.halocraft.HaloEntities.Vehicles;
 
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicVehicleEntity;
+import com.harby.halocraft.HaloEntities.BaseClasses.VehiculeTypes;
 import com.harby.halocraft.HaloEntities.Projectiles.PlasmaEntity;
 import com.harby.halocraft.Message.HaloKeys;
 import com.harby.halocraft.Message.KeyBindList;
@@ -16,13 +17,8 @@ import net.minecraft.world.phys.Vec3;
 public class Ghost extends BasicVehicleEntity {
     private int shooting_ticks = 0;
     public Ghost(Level level) {
-        super(HaloEntities.GHOST.get(), level);
+        super(HaloEntities.GHOST.get(), level, VehiculeTypes.HOVERING);
         this.setMaxUpStep(1.3F);
-    }
-
-    @Override
-    public boolean isHoveringVehicle() {
-        return true;
     }
 
     @Override
