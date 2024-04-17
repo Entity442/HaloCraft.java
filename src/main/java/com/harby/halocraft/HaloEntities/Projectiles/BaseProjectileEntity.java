@@ -49,6 +49,15 @@ public abstract class BaseProjectileEntity extends Projectile {
         this.setShoutedDirection(-livingEntity.getYRot(), -livingEntity.getXRot(), velocity);
         this.reapplyPosition();
     }
+    public BaseProjectileEntity(Level level, Entity livingEntity, AmmoList ammo, EntityType<? extends BaseProjectileEntity> entityType, double velocity, Vec3 shoutedPos) {
+        super(entityType, level);
+        this.setOwner(livingEntity);
+        this.setPos(shoutedPos);
+        this.setProjectileType(ammo);
+        this.setShoutedPos(livingEntity.getEyePosition());
+        this.setShoutedDirection(-livingEntity.getYRot(), -livingEntity.getXRot(), velocity);
+        this.reapplyPosition();
+    }
 
     public BaseProjectileEntity(Level level, EntityType<? extends BaseProjectileEntity> entityType) {
         super(entityType, level);
