@@ -1,5 +1,6 @@
 package com.harby.halocraft.HaloEntities.Alien;
 
+import com.harby.halocraft.HaloEntities.AI.FollowCommanderGoal;
 import com.harby.halocraft.HaloEntities.AI.PatrolAroundTheAreaGoal;
 import com.harby.halocraft.HaloEntities.BaseClasses.BasicNpcClass;
 import net.minecraft.world.entity.EntityType;
@@ -36,6 +37,7 @@ public class Grunt extends BasicNpcClass {
 
         this.goalSelector.addGoal(5,new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6,new PatrolAroundTheAreaGoal(this));
+        this.goalSelector.addGoal(6,new FollowCommanderGoal(this,BasicNpcClass.class,entity ->{return true;}));
         this.goalSelector.addGoal(7,new RandomStrollGoal(this,1));
 
     }

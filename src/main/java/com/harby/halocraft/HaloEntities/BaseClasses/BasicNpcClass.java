@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.monster.Enemy;
@@ -16,8 +17,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
+import javax.annotation.Nullable;
+
 public class BasicNpcClass extends PathfinderMob implements Enemy {
     private static final EntityDataAccessor<BlockPos> PATROL_POSITION = SynchedEntityData.defineId(BasicNpcClass.class, EntityDataSerializers.BLOCK_POS);
+    private static final EntityDataAccessor<Boolean> IS_PERSISTENT = SynchedEntityData.defineId(BasicNpcClass.class, EntityDataSerializers.BOOLEAN);
+    @Nullable
+    private LivingEntity commander;
+    @Nullable
+    private BlockPos immediateSearchArea;
     public BasicNpcClass(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
     }
@@ -25,7 +33,7 @@ public class BasicNpcClass extends PathfinderMob implements Enemy {
 
     @Override
     public boolean removeWhenFarAway(double p_21542_) {
-        return false;
+        return this.entityData.get(IS_PERSISTENT);
     }
 
     public BlockPos getPatrolPos(){
@@ -38,6 +46,7 @@ public class BasicNpcClass extends PathfinderMob implements Enemy {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(PATROL_POSITION,BlockPos.ZERO);
+        this.entityData.define(IS_PERSISTENT,false);
     }
 
     public void addAdditionalSaveData(CompoundTag tag) {
@@ -45,6 +54,7 @@ public class BasicNpcClass extends PathfinderMob implements Enemy {
         tag.putInt("PatrolX",this.getPatrolPos().getX());
         tag.putInt("PatrolY",this.getPatrolPos().getY());
         tag.putInt("PatrolZ",this.getPatrolPos().getZ());
+        tag.putBoolean("persistent",this.entityData.get(IS_PERSISTENT));
     }
 
     @Override
@@ -53,10 +63,20 @@ public class BasicNpcClass extends PathfinderMob implements Enemy {
         int j = tag.getInt("PatrolY");
         int k = tag.getInt("PatrolZ");
         this.setPatrolPosition(new BlockPos(i, j, k));
+        this.entityData.set(IS_PERSISTENT,tag.getBoolean("persistent"));
         super.readAdditionalSaveData(tag);
     }
 
+    public void setPersistence(boolean value){
+        this.entityData.set(IS_PERSISTENT,value);
+    }
 
+    public void setCommander(@Nullable LivingEntity commander) {
+        this.commander = commander;
+    }
+    public LivingEntity getCommander(){
+        return this.commander;
+    }
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {

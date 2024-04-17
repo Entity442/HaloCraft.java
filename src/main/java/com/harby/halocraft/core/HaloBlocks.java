@@ -2,12 +2,12 @@ package com.harby.halocraft.core;
 
 import com.harby.halocraft.HaloBlocks.BeamEmitter;
 import com.harby.halocraft.HaloBlocks.CustomDoor;
-import com.harby.halocraft.HaloBlocks.LinedRoad;
-import com.harby.halocraft.HaloBlocks.Road;
 import com.harby.halocraft.HaloCraft;
 import com.harby.halocraft.HaloItems.BlockItemBase;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,13 +43,13 @@ public class HaloBlocks {
     public static final RegistryObject<Block> CONCRETE_LAYERED = registerBlock("concrete_layered", () -> new Block(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
     public static final RegistryObject<Block> CONCRETE_LAYERED_SECOND = registerBlock("concrete_layered_second", () -> new Block(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
 
-    public static final RegistryObject<Block> ASPHALT = registerBlock("asphalt", () -> new Road(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
-    public static final RegistryObject<Block> CONCRETE_YELLOW_DOUBLE = registerBlock("concrete_yellow_double", () -> new LinedRoad(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
-    public static final RegistryObject<Block> WHITE_LINE = registerBlock("white_line", () -> new LinedRoad(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
-    public static final RegistryObject<Block> WHITE_LINE_DOTS = registerBlock("white_line_dot", () -> new LinedRoad(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
-    public static final RegistryObject<Block> YELLOW_DOUBLE = registerBlock("yellow_double", () -> new LinedRoad(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
-    public static final RegistryObject<Block> YELLOW_DOUBLE_DOT = registerBlock("yellow_double_dot", () -> new LinedRoad(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
-    public static final RegistryObject<Block> YELLOW_LINE = registerBlock("yellow_line", () -> new LinedRoad(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> ASPHALT = registerBlock("asphalt", () -> new Block(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> CONCRETE_YELLOW_DOUBLE = registerBlock("concrete_yellow_double", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> WHITE_LINE = registerBlock("white_line", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> WHITE_LINE_DOTS = registerBlock("white_line_dot", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> YELLOW_DOUBLE = registerBlock("yellow_double", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> YELLOW_DOUBLE_DOT = registerBlock("yellow_double_dot", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> YELLOW_LINE = registerBlock("yellow_line", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(2f, 4f).sound(SoundType.STONE)));
 
 
     public static final RegistryObject<Block> DENSE_ASTEROID = registerBlock("dense_asteroid", () -> new Block(BlockBehaviour.Properties.of().strength(2f, 6f).sound(SoundType.STONE)));

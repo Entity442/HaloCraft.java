@@ -49,7 +49,7 @@ public class BasicVehicleEntity extends Entity {
     private int controlDownTicks = 0;
     private int turnRightTicks = 0;
     private int turnLeftTicks = 0;
-    private VehiculeTypes vehiculeTypes;
+    private final VehiculeTypes vehiculeTypes;
 
     public BasicVehicleEntity(EntityType<?> type, Level level, VehiculeTypes vehiculeTypes) {
         super(type, level);
