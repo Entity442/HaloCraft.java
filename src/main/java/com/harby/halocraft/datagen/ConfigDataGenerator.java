@@ -13,6 +13,7 @@ public class ConfigDataGenerator {
     static {
         excludesBlocksGenerate.add(HaloBlocks.BEAM_EMITTER.get());
         excludesBlocksGenerate.add(HaloBlocks.CUSTOM_DOOR.get());
+        excludesBlocksGenerate.add(HaloBlocks.VENT.get());
     }
 
     static final ArrayList<Item> excludesItemsGenerate = new ArrayList<>();
