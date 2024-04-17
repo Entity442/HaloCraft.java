@@ -10,10 +10,9 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class PlasmaEntity extends BaseProjectileEntity {
-    /*private static final EntityDataAccessor<Integer> COLOR =
-            SynchedEntityData.defineId(PlasmaEntity.class, EntityDataSerializers.INT);*/
     private static final EntityDataAccessor<Integer> TEMPERATURE =
             SynchedEntityData.defineId(PlasmaEntity.class, EntityDataSerializers.INT);
 
@@ -23,7 +22,13 @@ public class PlasmaEntity extends BaseProjectileEntity {
             throw new IllegalArgumentException("PlasmaEntity can only be created with Plasma ammo.");
         }
         this.setTemperature(temperature);
-        //this.setColor(temperature * 5);
+    }
+    public PlasmaEntity(Level level, Entity livingEntity, AmmoList ammo, double velocity, int temperature, Vec3 shoutedPos) {
+        super(level, livingEntity, ammo, HaloEntities.PLASMA_BALL.get(), velocity, shoutedPos);
+        if (ammo.getType() != AmmoTypes.PLASMA) {
+            throw new IllegalArgumentException("PlasmaEntity can only be created with Plasma ammo.");
+        }
+        this.setTemperature(temperature);
     }
 
     public PlasmaEntity(Level level, EntityType<PlasmaEntity> entityType) {
@@ -33,7 +38,6 @@ public class PlasmaEntity extends BaseProjectileEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        //this.entityData.define(COLOR, 0);
         this.entityData.define(TEMPERATURE, 0);
     }
 
@@ -41,14 +45,12 @@ public class PlasmaEntity extends BaseProjectileEntity {
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        //this.setColor(tag.getInt("color"));
         this.setTemperature(tag.getInt("temperature"));
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        //tag.putInt("color", this.getColor());
         tag.putInt("temperature", this.getTemperature());
     }
 
@@ -59,8 +61,8 @@ public class PlasmaEntity extends BaseProjectileEntity {
         return new int[]{r, g, b};
     }
 
-    public void setTemperature(int i) {
-        this.entityData.set(TEMPERATURE, i);
+    public void setTemperature(int temperature) {
+        this.entityData.set(TEMPERATURE, temperature);
     }
 
     public int getTemperature() {
