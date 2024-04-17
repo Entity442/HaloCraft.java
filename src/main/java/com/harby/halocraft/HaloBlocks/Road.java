@@ -29,7 +29,10 @@ public class Road extends Block {
             if (v.getVehiculeTypes() == VehiculeTypes.HOVERING) {
                 amplifier = 1.5F;
             }
-            //add here vehicule speed modifier
+            if (v.getVehiculeTypes() == VehiculeTypes.TRACKER) {
+                amplifier = 0.75F;
+            }
+            v.setVector(v.getVector().scale(amplifier));
         }
     }
 

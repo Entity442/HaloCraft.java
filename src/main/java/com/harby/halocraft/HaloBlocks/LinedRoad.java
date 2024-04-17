@@ -15,7 +15,12 @@ public class LinedRoad extends RotatedPillarBlock {
         super(pProperties);
     }
 
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        BlockState blockState = pContext.getLevel().getBlockState(new BlockPos((int) Math.floor(pContext.getClickLocation().x),(int) Math.floor(pContext.getClickLocation().y),(int) Math.floor(pContext.getClickLocation().z)));
+        if (blockState.getBlock() instanceof LinedRoad) {
+            return this.defaultBlockState().setValue(AXIS, blockState.getValue(AXIS));
+        }
         return this.defaultBlockState().setValue(AXIS, pContext.getNearestLookingDirection().getOpposite().getAxis());
     }
 
@@ -34,7 +39,10 @@ public class LinedRoad extends RotatedPillarBlock {
             if (v.getVehiculeTypes() == VehiculeTypes.HOVERING) {
                 amplifier = 1.5F;
             }
-            //add here vehicule speed modifier
+            if (v.getVehiculeTypes() == VehiculeTypes.TRACKER) {
+                amplifier = 0.75F;
+            }
+            v.setVector(v.getVector().scale(amplifier));
         }
     }
 }
